@@ -1,0 +1,19 @@
+{
+    "name": "mary/shogi",
+    "description": "Japanese variation of chess game written in PHP",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Mary De Nóbrega",
+            "email": "denobrega.mary@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Shogi\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.4.2"
+    }
+}
