@@ -8,14 +8,11 @@ use Shogi\Pieces\PieceInterface;
 
 final class Spot
 {
-    private const LIMIT_X = 9;
-    private const LIMIT_Y = 9;
-
-    private string $x;
+    private int $x;
     private string $y;
     private ?PieceInterface $piece;
 
-    public function __construct(string $x, string $y, ?PieceInterface $piece)
+    public function __construct(int $x, string $y, ?PieceInterface $piece)
     {
         $this->validateCoordinates($x, $y);
 
@@ -24,18 +21,23 @@ final class Spot
         $this->piece = $piece;
     }
 
-    public static function add(string $x, string $y, ?PieceInterface $piece)
+    public static function add(int $x, string $y, ?PieceInterface $piece)
     {
         return new self($x, $y, $piece);
     }
 
-    private function validateCoordinates($x, $y)
+    public function piece(): PieceInterface
     {
-        if ($x < 1 && $x > self::LIMIT_X) {
+        return $this->piece;
+    }
+
+    private function validateCoordinates(int $x, string $y)
+    {
+        if ($x < 1 && $x > Board::LIMIT_X) {
             throw new \InvalidArgumentException();
         }
 
-        if ($y < 1 && $y > self::LIMIT_Y) {
+        if (in_array($y, range('A', 'I'))) {
             throw new \InvalidArgumentException();
         }
     }
