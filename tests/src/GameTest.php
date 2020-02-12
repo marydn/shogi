@@ -18,8 +18,8 @@ final class GameTest extends TestCase
     /** @test */
     public function it_should_move_a_piece(): void
     {
-        $from = 'A1';
-        $to = 'B2';
+        $from = '1A';
+        $to = '2B';
 
         $game = new Game();
         $originalPiece = $game->pieceFromSpot($from);
@@ -33,8 +33,8 @@ final class GameTest extends TestCase
     /** @test */
     public function it_should_undo_pieces_movements_from_another_player(): void
     {
-        $from = 'A1';
-        $to = 'B2';
+        $from = '1A';
+        $to = '2B';
 
         $game = new Game();
 
@@ -49,8 +49,8 @@ final class GameTest extends TestCase
     /** @test */
     public function it_should_undo_a_move_to_non_existent_spots(): void
     {
-        $from = 'A1';
-        $to = 'Z2';
+        $from = '1A';
+        $to = '2Z';
 
         $game = new Game();
 
