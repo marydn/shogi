@@ -14,18 +14,31 @@ final class Move
     private Spot $to;
     private PieceInterface $pieceMoved;
     private ?PieceInterface $pieceTarget;
+    private Notation $notation;
 
-    private function __construct(PlayerInterface $player, Spot $from, Spot $to, PieceInterface $pieceMoved, ?PieceInterface $pieceTarget)
+    private function __construct(
+        PlayerInterface $player,
+        Spot $from,
+        Spot $to,
+        PieceInterface $pieceMoved,
+        ?PieceInterface $pieceTarget)
     {
         $this->player      = $player;
         $this->from        = $from;
         $this->to          = $to;
         $this->pieceMoved  = $pieceMoved;
         $this->pieceTarget = $pieceTarget;
+
+        $this->notation = new Notation();
     }
 
     public static function make(PlayerInterface $player, Spot $from, Spot $to, PieceInterface $pieceMoved, ?PieceInterface $pieceTarget = null): self
     {
         return new self($player, $from, $to, $pieceMoved, $pieceTarget);
+    }
+
+    public function notation(): Notation
+    {
+        return $this->notation;
     }
 }
