@@ -4,16 +4,30 @@ declare(strict_types=1);
 
 namespace Shogi\Pieces;
 
+use Shogi\Player;
+
 final class Pawn implements PieceInterface
 {
-    public function canMove(): bool
+    private Player $player;
+
+    private function __construct(Player $player)
     {
-        // TODO: Implement canMove() method.
+        $this->player = $player;
+    }
+
+    public static function create(Player $player): Pawn
+    {
+        return new self($player);
     }
 
     public function isWhite(): bool
     {
-        // TODO: Implement isWhite() method.
+        return $this->player->isWhite();
+    }
+
+    public function canMove(): bool
+    {
+        // TODO: Implement canMove() method.
     }
 
     public function isCaptured(): bool
