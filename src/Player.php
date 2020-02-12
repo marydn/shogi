@@ -30,6 +30,11 @@ final class Player
         return $this->pieces;
     }
 
+    public function isWhite(): bool
+    {
+        return $this->isWhite;
+    }
+
     private function resetPieces(): void
     {
         $this->pieces = array(
@@ -42,8 +47,8 @@ final class Player
             new Rook(),
         );
 
-        for ($i = 1; $i <= Board::LIMIT_X; $i++) {
-            $this->pieces[] = new Pawn();
+        for ($i = 1; $i <= 9; $i++) {
+            $this->pieces[] = Pawn::create($this);
         }
     }
 }
