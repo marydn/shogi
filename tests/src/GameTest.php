@@ -22,29 +22,43 @@ final class GameTest extends TestCase
         $to = 'B2';
 
         $game = new Game();
+        $originalPiece = $game->pieceFromSpot($from);
 
-        $board = $game->board();
-        $piece = $game->pieceFromSpot($from);
+        $game->currentPlayerMove($from, $to);
 
-        $game->currentPlayerMove($piece, $to);
-
-        $oldSpot = $board->spot($from);
-        $newSpot = $board->spot($to);
-
-        $this->assertEquals($piece, $newSpot->piece());
-        $this->assertTrue($oldSpot->isEmpty());
+        $this->assertEquals($originalPiece, $game->pieceFromSpot($to));
+        $this->assertNotEquals($originalPiece, $game->pieceFromSpot($from));
     }
 
-    public function it_should_not_move_pieces_from_another_player(): void
+    /** @test */
+    public function it_should_undo_pieces_movements_from_another_player(): void
     {
         $from = 'A1';
         $to = 'B2';
 
         $game = new Game();
-        $piece = $game->pieceFromSpot($from);
 
-        $this->expectException(MoveNotAllowed::class);
+        $originalPiece = $game->pieceFromSpot($from);
 
-        $game->opposingPlayerMove($piece, $to);
+        $game->opposingPlayerMove($from, $to);
+
+        $this->assertEquals($originalPiece, $game->pieceFromSpot($from));
+        $this->assertNotEquals($originalPiece, $game->pieceFromSpot($to));
+    }
+
+    /** @test */
+    public function it_should_undo_a_move_to_non_existent_spots(): void
+    {
+        $from = 'A1';
+        $to = 'Z2';
+
+        $game = new Game();
+
+        $originalPiece = $game->pieceFromSpot($from);
+
+        $game->currentPlayerMove($from, $to);
+
+        $this->assertEquals($originalPiece, $game->pieceFromSpot($from));
+        $this->assertNotEquals($originalPiece, $game->pieceFromSpot($to));
     }
 }
