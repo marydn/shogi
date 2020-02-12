@@ -6,39 +6,43 @@ namespace Shogi;
 
 use Shogi\Pieces\PieceInterface;
 
+/** @TODO: Create a ValueObject for empty Spots */
+/** @TODO: Validate piece input */
 final class Spot
 {
-    private int $x;
-    private string $y;
+    private int $column;
+    private string $row;
     private ?PieceInterface $piece;
 
-    public function __construct(int $x, string $y, ?PieceInterface $piece)
+    private function __construct(int $column, string $row, ?PieceInterface $piece)
     {
-        $this->validateCoordinates($x, $y);
+        $this->column = $column;
+        $this->row    = $row;
+        $this->piece  = $piece;
+    }
 
-        $this->x     = $x;
-        $this->y     = $y;
+    public static function add(int $column, string $row, ?PieceInterface $piece)
+    {
+        return new self($column, $row, $piece);
+    }
+
+    public function column(): int
+    {
+        return $this->column;
+    }
+
+    public function row(): string
+    {
+        return $this->row;
+    }
+
+    public function fill(?PieceInterface $piece): void
+    {
         $this->piece = $piece;
     }
 
-    public static function add(int $x, string $y, ?PieceInterface $piece)
-    {
-        return new self($x, $y, $piece);
-    }
-
-    public function piece(): PieceInterface
+    public function piece(): ?PieceInterface
     {
         return $this->piece;
-    }
-
-    private function validateCoordinates(int $x, string $y)
-    {
-        if ($x < 1 && $x > Board::LIMIT_X) {
-            throw new \InvalidArgumentException();
-        }
-
-        if (in_array($y, range('A', 'I'))) {
-            throw new \InvalidArgumentException();
-        }
     }
 }
