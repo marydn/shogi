@@ -15,19 +15,18 @@ use Shogi\Pieces\SilverGeneral;
 
 final class Player
 {
+    private string $name;
     private bool $isWhite;
-    private array $pieces;
 
-    public function __construct(bool $isWhite = false)
+    public function __construct(string $name, bool $isWhite = false)
     {
+        $this->name = $name;
         $this->isWhite = $isWhite;
-
-        $this->resetPieces();
     }
 
-    public function pieces(): array
+    public function name(): string
     {
-        return $this->pieces;
+        return $this->name;
     }
 
     public function isWhite(): bool
@@ -35,20 +34,8 @@ final class Player
         return $this->isWhite;
     }
 
-    private function resetPieces(): void
+    public function __toString()
     {
-        $this->pieces = array(
-            new King(),
-            new GoldGeneral(), new GoldGeneral(),
-            new SilverGeneral(), new SilverGeneral(),
-            new Knight(), new Knight(),
-            new Lance(), new Lance(),
-            new Bishop(),
-            new Rook(),
-        );
-
-        for ($i = 1; $i <= 9; $i++) {
-            $this->pieces[] = Pawn::create($this);
-        }
+        return $this->name();
     }
 }

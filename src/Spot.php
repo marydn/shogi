@@ -6,7 +6,6 @@ namespace Shogi;
 
 use Shogi\Pieces\PieceInterface;
 
-/** @TODO: Create a ValueObject for empty Spots */
 /** @TODO: Validate piece input */
 final class Spot
 {
@@ -14,16 +13,11 @@ final class Spot
     private string $row;
     private ?PieceInterface $piece;
 
-    private function __construct(int $column, string $row, ?PieceInterface $piece)
+    public function __construct(int $column, string $row, ?PieceInterface $piece = null)
     {
         $this->column = $column;
         $this->row    = $row;
         $this->piece  = $piece;
-    }
-
-    public static function add(int $column, string $row, ?PieceInterface $piece)
-    {
-        return new self($column, $row, $piece);
     }
 
     public function column(): int
@@ -44,5 +38,15 @@ final class Spot
     public function piece(): ?PieceInterface
     {
         return $this->piece;
+    }
+
+    public function __toString()
+    {
+        return sprintf('%s:%s', $this->column, $this->row);
+        if (!$this->piece()) {
+            return str_pad('', 3, ' ');
+        }
+
+        return (string) $this->piece();
     }
 }

@@ -4,25 +4,12 @@ declare(strict_types=1);
 
 namespace Shogi\Pieces;
 
-final class GoldGeneral implements PieceInterface
+final class GoldGeneral extends BasePiece implements PieceInterface
 {
+    const NAME = 'G';
+
     public function canMove(): bool
     {
         // TODO: Implement canMove() method.
-    }
-
-    public function isWhite(): bool
-    {
-        // TODO: Implement isWhite() method.
-    }
-
-    public function isCaptured(): bool
-    {
-        // TODO: Implement isCaptured() method.
-    }
-
-    public function isPromoted(): bool
-    {
-        // TODO: Implement isPromoted() method.
     }
 }

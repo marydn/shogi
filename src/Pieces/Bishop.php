@@ -4,25 +4,12 @@ declare(strict_types=1);
 
 namespace Shogi\Pieces;
 
-final class Bishop implements PieceInterface
+final class Bishop extends BasePiece implements PieceInterface
 {
+    const NAME = 'B';
+
     public function canMove(): bool
     {
         // TODO: Implement canMove() method.
-    }
-
-    public function isWhite(): bool
-    {
-        // TODO: Implement isWhite() method.
-    }
-
-    public function isCaptured(): bool
-    {
-        // TODO: Implement isCaptured() method.
-    }
-
-    public function isPromoted(): bool
-    {
-        // TODO: Implement isPromoted() method.
     }
 }
