@@ -10,10 +10,10 @@ use Shogi\Pieces\PieceInterface;
 final class Spot
 {
     private int $column;
-    private string $row;
+    private int $row;
     private ?PieceInterface $piece;
 
-    public function __construct(int $column, string $row, ?PieceInterface $piece = null)
+    public function __construct(int $column, int $row, ?PieceInterface $piece = null)
     {
         $this->column = $column;
         $this->row    = $row;
@@ -25,12 +25,12 @@ final class Spot
         return $this->column;
     }
 
-    public function row(): string
+    public function row(): int
     {
         return $this->row;
     }
 
-    public function fill(?PieceInterface $piece): void
+    public function place(?PieceInterface $piece): void
     {
         $this->piece = $piece;
     }
@@ -38,6 +38,16 @@ final class Spot
     public function piece(): ?PieceInterface
     {
         return $this->piece;
+    }
+
+    public function isTaken(): bool
+    {
+        return boolval($this->piece);
+    }
+
+    public function pieceIsWhite(): bool
+    {
+        return $this->piece()->isWhite();
     }
 
     public function __toString()

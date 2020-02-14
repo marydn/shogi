@@ -116,44 +116,45 @@ final class Game
 
     private function resetBoard(): void
     {
-        $positions = [];
+        $positions = array_fill(0, 9, array_fill(0, 9, null));
 
         $currentPlayer = $this->currentPlayer();
         $opposingPlayer = $this->opposingPlayer();
 
-        $l1O = new Lance($opposingPlayer);
-        $k1O = new Knight($opposingPlayer);
-        $s1O = new SilverGeneral($opposingPlayer);
-        $g1O = new GoldGeneral($opposingPlayer);
-        $kO = new King($opposingPlayer);
-        $g2O = new GoldGeneral($opposingPlayer);
-        $s2O = new SilverGeneral($opposingPlayer);
-        $k2O = new Knight($opposingPlayer);
-        $l2O = new Lance($opposingPlayer);
-        $bO = new Bishop($opposingPlayer);
-        $rO = new Rook($opposingPlayer);
+        $l1O = new Lance($opposingPlayer->isWhite());
+        $k1O = new Knight($opposingPlayer->isWhite());
+        $s1O = new SilverGeneral($opposingPlayer->isWhite());
+        $g1O = new GoldGeneral($opposingPlayer->isWhite());
+        $kO = new King($opposingPlayer->isWhite());
+        $g2O = new GoldGeneral($opposingPlayer->isWhite());
+        $s2O = new SilverGeneral($opposingPlayer->isWhite());
+        $k2O = new Knight($opposingPlayer->isWhite());
+        $l2O = new Lance($opposingPlayer->isWhite());
+        $bO = new Bishop($opposingPlayer->isWhite());
+        $rO = new Rook($opposingPlayer->isWhite());
 
-        $l1C = new Lance($currentPlayer);
-        $k1C = new Knight($currentPlayer);
-        $s1C = new SilverGeneral($currentPlayer);
-        $g1C = new GoldGeneral($currentPlayer);
-        $kC = new King($currentPlayer);
-        $g2C = new GoldGeneral($currentPlayer);
-        $s2C = new SilverGeneral($currentPlayer);
-        $k2C = new Knight($currentPlayer);
-        $l2C = new Lance($currentPlayer);
-        $bC = new Bishop($currentPlayer);
-        $rC = new Rook($currentPlayer);
+        $l1C = new Lance($currentPlayer->isWhite());
+        $k1C = new Knight($currentPlayer->isWhite());
+        $s1C = new SilverGeneral($currentPlayer->isWhite());
+        $g1C = new GoldGeneral($currentPlayer->isWhite());
+        $kC = new King($currentPlayer->isWhite());
+        $g2C = new GoldGeneral($currentPlayer->isWhite());
+        $s2C = new SilverGeneral($currentPlayer->isWhite());
+        $k2C = new Knight($currentPlayer->isWhite());
+        $l2C = new Lance($currentPlayer->isWhite());
+        $bC = new Bishop($currentPlayer->isWhite());
+        $rC = new Rook($currentPlayer->isWhite());
 
         $positions[0] = [$l1O, $k1O, $s1O, $g1O, $kO, $g2O, $s2O, $k2O, $l2O];
-        $positions[1] = [null, $bO, null, null, null, null, null, $rO, null];
+        $positions[1][1] = $bO;
+        $positions[1][7] = $rO;
 
         for($i = 0; $i < 9; $i++) {
-            $positions[2][$i] = new Pawn($opposingPlayer);
+            $positions[2][$i] = new Pawn($opposingPlayer->isWhite());
             $positions[3][$i] = null;
             $positions[4][$i] = null;
             $positions[5][$i] = null;
-            $positions[6][$i] = new Pawn($opposingPlayer);
+            $positions[6][$i] = new Pawn($opposingPlayer->isWhite());
         }
 
         $positions[7] = [null, $bC, null, null, null, null, null, $rC, null];
