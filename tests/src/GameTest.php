@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use Shogi\Exception\CoordinateNotFound;
+use Shogi\Exception\IllegalMove;
 use Shogi\Game;
 
 final class GameTest extends TestCase
@@ -10,55 +12,62 @@ final class GameTest extends TestCase
     /** @test */
     public function it_should_create_a_new_game(): void
     {
-        new Game();
+        $game = new Game;
 
-        $this->assertTrue(true);
+        $this->assertInstanceOf(Game::class, $game);
     }
 
     /** @test */
     public function it_should_move_a_piece(): void
     {
-        $from = '1A';
-        $to = '2B';
+        $source = 'G3';
+        $target = 'G4';
+        $notationFromUser = sprintf('%sx%s', $source, $target);
 
-        $game = new Game();
-        $originalPiece = $game->pieceFromSpot($from);
+        $game = new Game;
 
-        $game->currentPlayerMove($from, $to);
+        $pieceToMove = $game->pieceFromSpot($source);
 
-        $this->assertEquals($originalPiece, $game->pieceFromSpot($to));
-        $this->assertNotEquals($originalPiece, $game->pieceFromSpot($from));
+        $game->currentPlayerMove($notationFromUser);
+
+        $this->assertEquals($pieceToMove, $game->pieceFromSpot($target));
     }
 
     /** @test */
-    public function it_should_undo_pieces_movements_from_another_player(): void
+    public function it_should_empty_old_spot(): void
     {
-        $from = '1A';
-        $to = '2B';
+        $source = 'G3';
+        $target = 'G4';
+        $notationFromUser = sprintf('%sx%s', $source, $target);
 
-        $game = new Game();
+        $game = new Game;
 
-        $originalPiece = $game->pieceFromSpot($from);
+        $pieceToMove = $game->pieceFromSpot($source);
 
-        $game->opposingPlayerMove($from, $to);
+        $game->currentPlayerMove($notationFromUser);
 
-        $this->assertEquals($originalPiece, $game->pieceFromSpot($from));
-        $this->assertNotEquals($originalPiece, $game->pieceFromSpot($to));
+        $this->assertNotEquals($pieceToMove, $game->pieceFromSpot($target));
     }
 
     /** @test */
-    public function it_should_undo_a_move_to_non_existent_spots(): void
+    public function it_should_throw_exception_when_move_pieces_from_opposing_player(): void
     {
-        $from = '1A';
-        $to = '2Z';
+        $userInput = 'A3xA4';
 
-        $game = new Game();
+        $this->expectException(IllegalMove::class);
 
-        $originalPiece = $game->pieceFromSpot($from);
+        $game = new Game;
+        $game->opposingPlayerMove($userInput);
+    }
 
-        $game->currentPlayerMove($from, $to);
+    /** @test */
+    public function it_should_throw_exception_when_spot_does_not_exist(): void
+    {
+        $userInput = 'A3xZ1';
 
-        $this->assertEquals($originalPiece, $game->pieceFromSpot($from));
-        $this->assertNotEquals($originalPiece, $game->pieceFromSpot($to));
+        $this->expectException(CoordinateNotFound::class);
+
+        $game = new Game;
+        $game->currentPlayerMove($userInput);
     }
 }
