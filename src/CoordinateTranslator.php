@@ -10,20 +10,20 @@ final class CoordinateTranslator
 {
     const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 
-    public Coordinate $coordinate;
+    public Coordinate $readableCoordinate;
 
     public function __construct(string $coordinate)
     {
-        $this->coordinate = new Coordinate($coordinate);
+        $this->readableCoordinate = new Coordinate($coordinate);
     }
 
     public function x(): int
     {
-        return array_search($this->coordinate->x(), self::LETTERS);
+        return array_search($this->readableCoordinate->x(), self::LETTERS);
     }
 
     public function y(): int
     {
-        return $this->coordinate->y() - 1;
+        return $this->readableCoordinate->y() - 1;
     }
 }
