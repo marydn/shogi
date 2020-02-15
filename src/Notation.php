@@ -22,4 +22,17 @@ final class Notation
     const KNIGHT         = 'N';
     const LANCE          = 'L';
     const PAWN           = 'P';
+
+    private Player $player;
+    private PieceInterface $piece;
+    private Spot $source;
+    private Spot $target;
+
+    public function __construct(Player $player, PieceInterface $piece, Spot $source, Spot $target)
+    {
+        $this->player = $player;
+        $this->piece  = $piece;
+        $this->source = $source;
+        $this->target = $target;
+    }
 }
