@@ -6,31 +6,28 @@ namespace Shogi;
 
 use Shogi\Pieces\PieceInterface;
 
-/** @TODO: Validate piece input */
 final class Spot
 {
-    private int $column;
-    private int $row;
+    private CoordinateTranslator $coordinate;
     private ?PieceInterface $piece;
 
-    public function __construct(int $column, int $row, ?PieceInterface $piece = null)
+    public function __construct(CoordinateTranslator $coordinate, ?PieceInterface $piece = null)
     {
-        $this->column = $column;
-        $this->row    = $row;
-        $this->piece  = $piece;
+        $this->coordinate = $coordinate;
+        $this->piece      = $piece;
     }
 
-    public function column(): int
+    public function coordinate(): CoordinateTranslator
     {
-        return $this->column;
+        return $this->coordinate;
     }
 
-    public function row(): int
+    public function removePiece(): void
     {
-        return $this->row;
+        $this->piece = null;
     }
 
-    public function place(?PieceInterface $piece): void
+    public function replacePiece(?PieceInterface $piece): void
     {
         $this->piece = $piece;
     }
@@ -50,13 +47,18 @@ final class Spot
         return $this->piece()->isWhite();
     }
 
+    private function readableCoordinateX(): string
+    {
+        return $this->coordinate->readableCoordinate->x();
+    }
+
+    private function readableCoordinateY(): int
+    {
+        return $this->coordinate->readableCoordinate->y();
+    }
+
     public function __toString()
     {
-        return sprintf('%s:%s', $this->column, $this->row);
-        if (!$this->piece()) {
-            return str_pad('', 3, ' ');
-        }
-
-        return (string) $this->piece();
+        return sprintf('%s:%s - %s', $this->readableCoordinateX(), $this->readableCoordinateY(), $this->piece());
     }
 }
