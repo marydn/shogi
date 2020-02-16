@@ -4,27 +4,75 @@ declare(strict_types=1);
 
 namespace Shogi;
 
+use Shogi\Pieces\PieceInterface;
+use Shogi\ValueObject\Coordinate;
+
 final class Board
 {
-    const LIMIT_X = 9;
-    const LIMIT_Y = 9;
-
-    private array $columns;
-    private array $rows;
+    private array $positions;
 
     public function __construct()
     {
-        $this->columns = range(1, self::LIMIT_X);
-        $this->rows    = array_slice(range('A', 'Z'), 0, self::LIMIT_X-1);
+        $this->resetBoard();
     }
 
-    public function rows(): array
+    public function positions(): array
     {
-        return $this->rows;
+        return $this->positions;
     }
 
-    public function columns(): array
+    public function spot(string $target): Spot
     {
-        return $this->columns;
+        $translated = $this->translateInput($target);
+
+        $x = $translated->x();
+        $y = $translated->y();
+
+        return $this->positions[$y][$x];
+    }
+
+    public function fillSpotAndCastPiece(string $target, PieceInterface $piece): self
+    {
+        if (!$this->spotContainsPiece($target, $piece)) {
+            $this->spot($target)->fillAndCastPiece($piece);
+        }
+
+        return $this;
+    }
+
+    public function spotContainsPiece(string $target, PieceInterface $piece): bool
+    {
+        $spot = $this->spot($target);
+
+        return $spot->piece() === $piece;
+    }
+
+    private function translateInput(string $input): CoordinateTranslator
+    {
+        return new CoordinateTranslator($input);
+    }
+
+    private function resetBoard(): void
+    {
+        $rows    = Coordinate::LETTERS;
+        $columns = range(count($rows), 1);
+
+        foreach ($rows as $row) {
+            foreach ($columns as $column) {
+                $this->createEmptySpot($column, $row);
+            }
+        }
+    }
+
+    private function createEmptySpot($column, $row): void
+    {
+        $coordinate = sprintf('%s%s', $row,$column);
+        $coordinate = new CoordinateTranslator($coordinate);
+        $internalX  = $coordinate->x();
+        $internalY  = $coordinate->y();
+
+        $emptySpot = new Spot($coordinate);
+
+        $this->positions[$internalY][$internalX] = $emptySpot;
     }
 }
