@@ -10,9 +10,7 @@ use Shogi\Spot;
 /**
  * Silver General's behaviour:
  *  - Can move one step at time.
- *  - Can move to a Spot in front of them.
- *  - Can move to a Spot in diagonal directions towards Opponent.
- *  - Can move to a Spot in diagonal directions behind them.
+ *  - Can move to any direction except the straight Spot right behind them.
  *  - When promoted move exactly like a Gold General.
  */
 final class SilverGeneral extends BasePiece implements PieceInterface, PiecePromotableInterface
