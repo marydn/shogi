@@ -22,14 +22,26 @@ final class Spot
         return $this->coordinate;
     }
 
-    public function removePiece(): void
+    public function removePiece(): self
     {
         $this->piece = null;
+
+        return $this;
     }
 
-    public function replacePiece(?PieceInterface $piece): void
+    public function fill(PieceInterface $piece): self
     {
         $this->piece = $piece;
+
+        return $this;
+    }
+
+    public function fillAndCastPiece(PieceInterface $piece): self
+    {
+        $piece->cast();
+        $this->fill($piece);
+
+        return $this;
     }
 
     public function piece(): ?PieceInterface
@@ -44,21 +56,21 @@ final class Spot
 
     public function pieceIsWhite(): bool
     {
-        return $this->piece()->isWhite();
+        return $this->piece() ? $this->piece()->isWhite() : false;
     }
 
-    private function readableCoordinateX(): string
+    public function x()
     {
-        return $this->coordinate->readableCoordinate->x();
+        return $this->coordinate->x();
     }
 
-    private function readableCoordinateY(): int
+    public function y()
     {
-        return $this->coordinate->readableCoordinate->y();
+        return $this->coordinate->y();
     }
 
     public function __toString()
     {
-        return sprintf('%s:%s - %s', $this->readableCoordinateX(), $this->readableCoordinateY(), $this->piece());
+        return (string) $this->piece();
     }
 }

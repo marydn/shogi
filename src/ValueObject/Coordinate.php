@@ -5,28 +5,31 @@ declare(strict_types=1);
 namespace Shogi\ValueObject;
 
 use Shogi\Exception\CoordinateNotFound;
+use Shogi\Exception\CoordinateNotWellFormedNotation;
 
 final class Coordinate
 {
-    private string $x;
-    private int $y;
+    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+
+    private int $x;
+    private string $y;
 
     public function __construct(string $notation)
     {
         self::validate($notation);
 
-        [$x, $y] = str_split($notation);
+        [$y, $x] = str_split($notation);
 
-        $this->x = strtoupper($x);
-        $this->y = (int) $y;
+        $this->x = (int) $x;
+        $this->y = strtoupper($y);
     }
 
-    public function x(): string
+    public function x(): int
     {
         return $this->x;
     }
 
-    public function y(): int
+    public function y(): string
     {
         return $this->y;
     }
@@ -34,19 +37,19 @@ final class Coordinate
     private static function validate(string $notation)
     {
         if (strlen(trim($notation)) > 2) {
-            throw new CoordinateNotFound;
+            throw new CoordinateNotWellFormedNotation($notation);
         }
 
-        [$x, $y] = str_split($notation);
+        [$y, $x] = str_split($notation);
 
-        $x = array_search(strtoupper($x), range('A', 'I'));
+        $y = array_search(strtoupper($y), self::LETTERS);
 
-        if (false === $x) {
-            throw new CoordinateNotFound;
+        if (false === $y) {
+            throw new CoordinateNotFound($notation);
         }
 
-        if ($y < 1 || $y > 9) {
-            throw new CoordinateNotFound;
+        if ($x < 1 || $x > 9) {
+            throw new CoordinateNotFound($notation);
         }
     }
 }

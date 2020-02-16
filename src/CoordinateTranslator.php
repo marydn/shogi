@@ -8,8 +8,6 @@ use Shogi\ValueObject\Coordinate;
 
 final class CoordinateTranslator
 {
-    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-
     public Coordinate $readableCoordinate;
 
     public function __construct(string $coordinate)
@@ -19,11 +17,14 @@ final class CoordinateTranslator
 
     public function x(): int
     {
-        return array_search($this->readableCoordinate->x(), self::LETTERS);
+        $readableY = $this->readableCoordinate->x();
+        $readableY = abs($readableY - count(Coordinate::LETTERS));
+
+        return $readableY;
     }
 
     public function y(): int
     {
-        return $this->readableCoordinate->y() - 1;
+        return array_search($this->readableCoordinate->y(), Coordinate::LETTERS);
     }
 }
