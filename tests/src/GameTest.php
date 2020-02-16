@@ -21,7 +21,7 @@ final class GameTest extends TestCase
     public function it_should_move_a_piece(): void
     {
         $source = 'G3';
-        $target = 'G4';
+        $target = 'F3';
         $notationFromUser = sprintf('%sx%s', $source, $target);
 
         $game = new Game;
@@ -36,8 +36,8 @@ final class GameTest extends TestCase
     /** @test */
     public function it_should_empty_old_spot(): void
     {
-        $source = 'G3';
-        $target = 'G4';
+        $source = 'G1';
+        $target = 'F1';
         $notationFromUser = sprintf('%sx%s', $source, $target);
 
         $game = new Game;
@@ -46,7 +46,7 @@ final class GameTest extends TestCase
 
         $game->currentPlayerMove($notationFromUser);
 
-        $this->assertNotEquals($pieceToMove, $game->pieceFromSpot($target));
+        $this->assertNull($game->pieceFromSpot($source));
     }
 
     /** @test */
