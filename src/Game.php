@@ -67,11 +67,9 @@ final class Game
         return $this->board->positions();
     }
 
-    public function pieceFromSpot(string $from): ?PieceInterface
+    public function pieceFromSpot(string $source): ?PieceInterface
     {
-        $spot = $this->board->spot($from);
-
-        return $spot->piece();
+        return $this->board->pieceFromSpot($source);
     }
 
     public function flipTurn(): void

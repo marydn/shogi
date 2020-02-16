@@ -31,6 +31,13 @@ final class Board
         return $this->positions[$y][$x];
     }
 
+    public function pieceFromSpot(string $source): ?PieceInterface
+    {
+        $spot = $this->spot($source);
+
+        return $spot->piece();
+    }
+
     public function fillSpotAndCastPiece(string $target, PieceInterface $piece): self
     {
         if (!$this->spotContainsPiece($target, $piece)) {
