@@ -25,9 +25,14 @@ final class Pawn extends BasePiece implements PieceInterface
         }
 
         $x = abs($source->x() - $target->x());
-        $y = abs($source->y() - $target->y());
+        $y = $source->y() - $target->y();
 
-        $isMovingForward = $x === 0 && $y === 1;
+        if ($this->isWhite()) {
+            $isMovingForward = $x === 0 && $y === -1;
+        } else {
+            $isMovingForward = $x === 0 && $y === 1;
+        }
+
         if (!$isMovingForward) {
             return false;
         }
