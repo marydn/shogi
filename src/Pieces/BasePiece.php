@@ -5,33 +5,27 @@ declare(strict_types=1);
 namespace Shogi\Pieces;
 
 use Shogi\Board;
-use Shogi\Exception\IllegalMove;
 use Shogi\Spot;
 
 abstract class BasePiece
 {
-    protected const WHITE_SYMBOL = '○';
-    protected const BLACK_SYMBOL = '●';
-
-    protected bool $isWhite;
-    protected bool $isCaptured;
-    protected bool $isPromoted;
+    protected bool $isWhite = false;
+    protected bool $isCaptured = false;
+    protected bool $isPromoted = false;
+    protected bool $isCasted = false;
 
     public function __construct(bool $isWhite)
     {
         $this->isWhite = $isWhite;
     }
 
-    abstract public function canMove(Board $board, Spot $from, Spot $to): bool;
+    abstract public function isMoveAllowed(Board $board, Spot $from, Spot $to): bool;
+
+    abstract public function canBePromoted(): bool;
 
     final public function isWhite(): bool
     {
         return $this->isWhite;
-    }
-
-    final public function capture(): void
-    {
-        $this->isCaptured = true;
     }
 
     final public function isCaptured(): bool
@@ -39,23 +33,39 @@ abstract class BasePiece
         return $this->isCaptured;
     }
 
-    final public function promote(): void
-    {
-        $this->isPromoted = true;
-    }
-
     final public function isPromoted(): bool
     {
         return $this->isPromoted;
     }
 
-    private function symbol(): string
+    final public function isCasted(): bool
     {
-        return $this->isWhite() ? self::WHITE_SYMBOL : self::BLACK_SYMBOL;
+        return $this->isCasted;
+    }
+
+    final public function promote(): PieceInterface
+    {
+        $this->isPromoted = true;
+
+        return $this;
+    }
+
+    final public function capture(): PieceInterface
+    {
+        $this->isCaptured = true;
+
+        return $this;
+    }
+
+    final public function cast(): PieceInterface
+    {
+        $this->isCasted = true;
+
+        return $this;
     }
 
     public function __toString()
     {
-        return sprintf('%s %s', static::NAME, $this->symbol());
+        return static::NAME;
     }
 }
