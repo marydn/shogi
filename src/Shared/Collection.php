@@ -17,13 +17,6 @@ abstract class Collection implements \Countable, \IteratorAggregate
         $this->items = $items;
     }
 
-    public function add($item)
-    {
-        static::validateType($this->getType(), [$item]);
-
-        $this->items[] = $item;
-    }
-
     public function toArray(): array
     {
         return $this->items;
@@ -31,7 +24,7 @@ abstract class Collection implements \Countable, \IteratorAggregate
 
     public function getIterator(): \ArrayIterator
     {
-        return new \ArrayIterator($this);
+        return new \ArrayIterator($this->items);
     }
 
     public function count(): int

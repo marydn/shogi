@@ -12,4 +12,9 @@ final class MovesList extends Collection
     {
         return Move::class;
     }
+
+    public function add(Move $move)
+    {
+        new self([...$this->items(), ...[$move]]);
+    }
 }

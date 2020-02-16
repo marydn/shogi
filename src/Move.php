@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Shogi;
 
 use Shogi\Exception\IllegalMove;
-use Shogi\Pieces\PieceInterface;
 
 final class Move
 {
@@ -35,36 +34,19 @@ final class Move
      */
     private function make()
     {
-        $piece = $this->pieceToMove();
+        $piece = $this->source->piece();
+        if (!$piece) {
+            throw new IllegalMove;
+        }
 
         $canMove = $piece->isMoveAllowed($this->board, $this->source, $this->target);
         if (!$canMove) {
             throw new IllegalMove;
         }
 
-        $this->movePieceFromSourceToTarget();
-    }
-
-    private function pieceToMove(): PieceInterface
-    {
-        return $this->source->piece();
-    }
-
-    private function movePieceFromSourceToTarget(): self
-    {
         $this->source->removePiece();
-        $this->target->replacePiece($this->pieceToMove());
+        $this->target->fill($piece);
 
-        $this->annotateMove();
-    }
-
-    private function annotateMove(): void
-    {
-        $this->notation = new Notation(
-            $this->player,
-            $this->pieceToMove(),
-            $this->source,
-            $this->target
-        );
+        $this->notation = new Notation($this->player, $piece, $this->source, $this->target);
     }
 }
