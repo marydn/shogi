@@ -7,19 +7,58 @@ namespace Shogi\Pieces;
 use Shogi\Board;
 use Shogi\Spot;
 
-final class Knight extends BasePiece implements PieceInterface
+/**
+ * Knight's behaviour:
+ *  - Can move in L form.
+ *  - L form is restricted to 2 steps in Y and 1 step in X.
+ *  - Can jump over other pieces.
+ *  - When promoted move exactly like a Gold General.
+ */
+final class Knight extends BasePiece implements PieceInterface, PiecePromotableInterface
 {
     const NAME = 'N';
 
-    public function canMove(Board $board, Spot $from, Spot $to): bool
+    private bool $isPromoted = false;
+
+    public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($to->pieceIsWhite() === $this->isWhite()) {
+        if ($target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
 
-        $x = abs($from->column() - $to->column());
-        $y = abs($from->row() - $to->row());
+        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+            return false;
+        }
 
+        if ($source->pieceIsPromoted()) {
+            // @TODO: move like a Gold General
+        }
 
+        $x = abs($source->x() - $target->x());
+        $y = $source->y() - $target->y();
+
+        if ($this->isWhite()) {
+            $isMovingForward = $x === 1 && $y === -2;
+        } else {
+            $isMovingForward = $x === 1 && $y === 2;
+        }
+
+        if (!$isMovingForward) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isPromoted(): bool
+    {
+        return $this->isPromoted;
+    }
+
+    public function promote(): PieceInterface
+    {
+        $this->isPromoted = true;
+
+        return $this;
     }
 }

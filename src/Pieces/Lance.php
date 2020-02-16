@@ -14,18 +14,23 @@ use Shogi\Spot;
  *  - Cannot jump over other pieces, should capture them first.
  *  - When promoted move exactly like a Gold General.
  */
-final class Lance extends BasePiece implements PieceInterface
+final class Lance extends BasePiece implements PieceInterface, PiecePromotableInterface
 {
-    const NAME          = 'L';
-    const IS_PROMOTABLE = true;
+    const NAME = 'L';
+
+    private bool $isPromoted = false;
 
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
+        if ($target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
 
-        if ($target->pieceIsPromoted()) {
+        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+            return false;
+        }
+
+        if ($source->pieceIsPromoted()) {
             // @TODO: move like a Gold General
         }
 
@@ -42,7 +47,7 @@ final class Lance extends BasePiece implements PieceInterface
             return false;
         }
 
-        $isBusy = $this->isPathBusy($board, $source->readableX(), $source->readableY(), $target->readableY());
+        $isBusy = $this->isPathBusy($board, $source, $target);
         if ($isBusy) {
             return false;
         }
@@ -50,17 +55,24 @@ final class Lance extends BasePiece implements PieceInterface
         return true;
     }
 
-    public function canBePromoted(): bool
+    public function isPromoted(): bool
     {
-        return self::IS_PROMOTABLE;
+        return $this->isPromoted;
     }
 
-    private function isPathBusy(Board $board, $x, $start, $end): bool
+    public function promote(): PieceInterface
     {
-        $spacesInBetween = range($start, $end);
+        $this->isPromoted = true;
+
+        return $this;
+    }
+
+    private function isPathBusy(Board $board, Spot $source, Spot $target): bool
+    {
+        $spacesInBetween = range($source->readableY(), $target->readableY());
 
         foreach ($spacesInBetween as $spaceToCheck) {
-            if ($board->pieceFromSpot(sprintf('%s%s', $spaceToCheck, $x))) {
+            if ($board->pieceFromSpot(sprintf('%s%s', $spaceToCheck, $source->x()))) {
                 return true;
             }
         }

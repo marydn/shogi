@@ -7,14 +7,45 @@ namespace Shogi\Pieces;
 use Shogi\Board;
 use Shogi\Spot;
 
+/**
+ * Gold General's behaviour:
+ *  - Can move one step at time.
+ *  - Can move to any direction except left and right diagonal Steps behind.
+ */
 final class GoldGeneral extends BasePiece implements PieceInterface
 {
     const NAME = 'G';
 
-    public function canMove(Board $board, Spot $from, Spot $to): bool
+    public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($to->pieceIsWhite() === $this->isWhite()) {
+        if ($target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
+
+        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+            return false;
+        }
+
+        $x = abs($source->x() - $target->x());
+        $y = abs($source->y() - $target->y());
+
+        if ($x === 0 && $y === 0) {
+            return false;
+        }
+
+        if ($x > 1 || $y > 1) {
+            return false;
+        }
+
+        $realY = $source->y() - $target->y();
+
+        $isMovingBackward            = $this->isWhite() ? $realY === 1 : $realY === -1;
+        $isMovingBackwardAndStraight = $isMovingBackward && $x === 0;
+
+        if (!$isMovingBackwardAndStraight) {
+            return false;
+        }
+
+        return true;
     }
 }

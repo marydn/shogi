@@ -10,22 +10,28 @@ use Shogi\Spot;
 /**
  * Rook's behaviour:
  *  - Can move as many as Steps as it wants.
- *  - Can move only in straight directions backwards and towards and left and right.
+ *  - Can move in any straight direction.
  *  - Can be promoted.
+ *  - Cannot jump over another piece.
  *  - When promoted, moves like a Rook but acquires the power to move a single Step diagonally.
  */
-final class Rook extends BasePiece implements PieceInterface
+final class Rook extends BasePiece implements PieceInterface, PiecePromotableInterface
 {
-    const NAME          = 'R';
-    const IS_PROMOTABLE = true;
+    const NAME = 'R';
+
+    private bool $isPromoted = false;
 
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
+        if ($target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
 
-        if ($target->pieceIsPromoted()) {
+        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+            return false;
+        }
+
+        if ($source->pieceIsPromoted()) {
             // @TODO: move like a Rook and add moves to diagonal Steps
         }
 
@@ -37,7 +43,7 @@ final class Rook extends BasePiece implements PieceInterface
             return false;
         }
 
-        $isBusy = $this->isPathBusy($board, $source->readableXY(), $target->readableXY());
+        $isBusy = $this->isPathBusy($board, $source, $target);
         if ($isBusy) {
             return false;
         }
@@ -45,23 +51,28 @@ final class Rook extends BasePiece implements PieceInterface
         return true;
     }
 
-    public function canBePromoted(): bool
+    public function isPromoted(): bool
     {
-        return self::IS_PROMOTABLE;
+        return $this->isPromoted;
     }
 
-    private function isPathBusy(Board $board, $start, $end): bool
+    public function promote(): PieceInterface
     {
-        $spacesInBetween = range($start, $end);
-        $isBusy          = false;
+        $this->isPromoted = true;
 
-        foreach ($spacesInBetween as $spaceToCheck) {
-            if ($board->pieceFromSpot($spaceToCheck)) {
-                $isBusy = true;
-                break;
-            }
-        }
+        return $this;
+    }
 
-        return $isBusy;
+    private function isPathBusy(Board $board, Spot $source, Spot $target): bool
+    {
+//        $spacesInBetween = range($start, $end);
+//
+//        foreach ($spacesInBetween as $spaceToCheck) {
+//            if ($board->pieceFromSpot($spaceToCheck)) {
+//                return true;
+//            }
+//        }
+
+        return false;
     }
 }

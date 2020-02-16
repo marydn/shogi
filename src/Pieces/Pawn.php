@@ -9,19 +9,29 @@ use Shogi\Spot;
 
 /**
  * Pawn's behaviour:
- *  - Can move only one Step at time
- *  - Can capture pieces in front of them
- *  - Can move only towards Opponent's direction
+ *  - Can move only one Step at time.
+ *  - Can capture pieces in front of them.
+ *  - Can move only towards Opponent's direction.
+ *  - When promoted move exactly like a Gold General.
  */
-final class Pawn extends BasePiece implements PieceInterface
+final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInterface
 {
-    const NAME          = 'P';
-    const IS_PROMOTABLE = true;
+    const NAME = 'P';
+
+    private bool $isPromoted = false;
 
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
+        if ($target->pieceIsWhite() === $this->isWhite()) {
             return false;
+        }
+
+        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+            return false;
+        }
+
+        if ($source->pieceIsPromoted()) {
+            // @TODO: move like a Gold General
         }
 
         $x = abs($source->x() - $target->x());
@@ -40,8 +50,15 @@ final class Pawn extends BasePiece implements PieceInterface
         return true;
     }
 
-    public function canBePromoted(): bool
+    public function isPromoted(): bool
     {
-        return self::IS_PROMOTABLE;
+        return $this->isPromoted;
+    }
+
+    public function promote(): PieceInterface
+    {
+        $this->isPromoted = true;
+
+        return $this;
     }
 }
