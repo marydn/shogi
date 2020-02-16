@@ -20,17 +20,13 @@ final class GameTest extends TestCase
     /** @test */
     public function it_should_move_a_piece(): void
     {
-        $source = 'G3';
-        $target = 'F3';
-        $notationFromUser = sprintf('%sx%s', $source, $target);
-
         $game = new Game;
 
-        $pieceToMove = $game->pieceFromSpot($source);
+        $pieceToMove = $game->pieceFromSpot('G3');
 
-        $game->currentPlayerMove($notationFromUser);
+        $game->currentPlayerMove('G3xF3');
 
-        $this->assertEquals($pieceToMove, $game->pieceFromSpot($target));
+        $this->assertEquals($pieceToMove, $game->pieceFromSpot('F3'));
     }
 
     /** @test */

@@ -64,6 +64,24 @@ final class CoordinateTranslatorTest extends TestCase
     }
 
     /** @test */
+    public function it_should_translate_input_to_a_valid_spot_coordinate7(): void
+    {
+        $coordinateTranslator = new CoordinateTranslator('H2');
+
+        $this->assertEquals(7, $coordinateTranslator->y());
+        $this->assertEquals(7, $coordinateTranslator->x());
+    }
+
+    /** @test */
+    public function it_should_translate_input_to_a_valid_spot_coordinate8(): void
+    {
+        $coordinateTranslator = new CoordinateTranslator('G3');
+
+        $this->assertEquals(6, $coordinateTranslator->y());
+        $this->assertEquals(6, $coordinateTranslator->x());
+    }
+
+    /** @test */
     public function it_should_be_a_valid_forward_y_step(): void
     {
         $source = new CoordinateTranslator('G1');

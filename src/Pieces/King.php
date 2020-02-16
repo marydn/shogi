@@ -19,11 +19,11 @@ final class King extends BasePiece implements PieceInterface
 
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($target->pieceIsWhite() === $this->isWhite()) {
+        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
 
-        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+        if (!$this->isAvailable()) {
             return false;
         }
 

@@ -25,13 +25,13 @@ final class PawnTest extends TestCase
     /** @test */
     public function it_should_move_only_one_step(): void
     {
-        $board  = new Board;
-        $source = new Spot(new CoordinateTranslator('G1'));
-        $target = new Spot(new CoordinateTranslator('F1'));
+        $game = new Game;
 
-        $pawn = new Pawn(false);
+        $piece = $game->pieceFromSpot('G1');
 
-        $this->assertTrue($pawn->isMoveAllowed($board, $source, $target));
+        $game->currentPlayerMove('G1xF1');
+
+        $this->assertEquals($piece, $game->pieceFromSpot('F1'));
     }
 
     /** @test */

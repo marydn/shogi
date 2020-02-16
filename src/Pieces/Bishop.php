@@ -7,14 +7,74 @@ namespace Shogi\Pieces;
 use Shogi\Board;
 use Shogi\Spot;
 
-final class Bishop extends BasePiece implements PieceInterface
+/**
+ * Bishop's behaviour:
+ *  - Can move as many as Steps as it wants.
+ *  - Can move diagonally in any direction.
+ *  - Cannot jump over another piece.
+ *  - When promoted, moves like a Bishop but acquires the power to move a single square orthogonally.
+ */
+final class Bishop extends BasePiece implements PieceInterface, PiecePromotableInterface
 {
     const NAME = 'B';
 
-    public function canMove(Board $board, Spot $from, Spot $to): bool
+    private bool $isPromoted = false;
+
+    public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($to->pieceIsWhite() === $this->isWhite()) {
+        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
+
+        if (!$this->isAvailable()) {
+            return false;
+        }
+
+        if ($this->isPromoted()) {
+            // @TODO: move like a Bishop but acquires the power to move a single square orthogonally
+        }
+
+        $x = abs($source->x() - $target->x());
+        $y = abs($source->y() - $target->y());
+
+        $targetIsValid = $x === $y;
+        if (!$targetIsValid) {
+            return false;
+        }
+
+        $isBusy = $this->isPathBusy($board, $source, $target);
+        if ($isBusy) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isPromoted(): bool
+    {
+        return $this->isPromoted;
+    }
+
+    public function promote(): PieceInterface
+    {
+        $this->isPromoted = true;
+
+        return $this;
+    }
+
+    private function isPathBusy(Board $board, Spot $source, Spot $target): bool
+    {
+        $xs = range($source->readableX(), $target->readableX());
+        $ys = range($source->readableY(), $target->readableY());
+
+        foreach ($xs as $x) {
+            foreach ($ys as $y) {
+                if ($board->pieceFromSpot(sprintf('%s%s', $y, $x))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

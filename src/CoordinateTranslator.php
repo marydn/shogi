@@ -17,10 +17,10 @@ final class CoordinateTranslator
 
     public function x(): int
     {
-        $readableY = $this->readableCoordinate->x();
-        $readableY = abs($readableY - count(Coordinate::LETTERS));
+        $readableX = $this->readableCoordinate->x();
+        $readableX = abs(count(Coordinate::LETTERS) - $readableX);
 
-        return $readableY;
+        return $readableX;
     }
 
     public function y(): int

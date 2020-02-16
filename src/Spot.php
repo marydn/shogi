@@ -17,11 +17,6 @@ final class Spot
         $this->piece      = $piece;
     }
 
-    public function coordinate(): CoordinateTranslator
-    {
-        return $this->coordinate;
-    }
-
     public function removePiece(): self
     {
         $this->piece = null;
@@ -71,16 +66,6 @@ final class Spot
     public function pieceIsWhite(): bool
     {
         return $this->piece() ? $this->piece()->isWhite() : false;
-    }
-
-    public function pieceIsPromoted(): bool
-    {
-        return $this->piece() ? $this->piece()->isPromoted() : false;
-    }
-
-    public function pieceIsAvailableFor(bool $isWhite): bool
-    {
-        return $this->piece()->isAvailableFor($isWhite);
     }
 
     public function x()

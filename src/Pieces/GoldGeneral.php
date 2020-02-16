@@ -18,11 +18,11 @@ final class GoldGeneral extends BasePiece implements PieceInterface
 
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($target->pieceIsWhite() === $this->isWhite()) {
+        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
 
-        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+        if (!$this->isAvailable()) {
             return false;
         }
 
@@ -39,10 +39,10 @@ final class GoldGeneral extends BasePiece implements PieceInterface
 
         $realY = $source->y() - $target->y();
 
-        $isMovingBackward            = $this->isWhite() ? $realY === 1 : $realY === -1;
-        $isMovingBackwardAndStraight = $isMovingBackward && $x === 0;
+        $isMovingBackward           = $this->isWhite() ? $realY === 1 : $realY === -1;
+        $isMovingBackwardDiagonally = $isMovingBackward && $x === 1;
 
-        if (!$isMovingBackwardAndStraight) {
+        if ($isMovingBackwardDiagonally) {
             return false;
         }
 

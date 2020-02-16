@@ -21,15 +21,15 @@ final class SilverGeneral extends BasePiece implements PieceInterface, PieceProm
 
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
-        if ($target->pieceIsWhite() === $this->isWhite()) {
+        if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
             return false;
         }
 
-        if (!$source->pieceIsAvailableFor($this->isWhite())) {
+        if (!$this->isAvailable()) {
             return false;
         }
 
-        if ($source->pieceIsPromoted()) {
+        if ($this->isPromoted()) {
             // @TODO: move like a Gold General
         }
 

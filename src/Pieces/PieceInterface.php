@@ -11,7 +11,7 @@ interface PieceInterface
     public function isWhite(): bool;
     public function isCaptured(): bool;
     public function isCasted(): bool;
-    public function isAvailableFor(bool $isWhite): bool;
+    public function isAvailable(): bool;
     public function capture(): PieceInterface;
     public function cast(): PieceInterface;
 }

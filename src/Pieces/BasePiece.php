@@ -24,7 +24,7 @@ abstract class BasePiece
 
     final public function isWhite(): bool
     {
-        return $this->isWhite || (false === $this->isWhite && true === $this->isCaptured);
+        return $this->isWhite;
     }
 
     final public function isCaptured(): bool
@@ -51,17 +51,9 @@ abstract class BasePiece
         return $this;
     }
 
-    public function isAvailableFor(bool $isWhite): bool
+    public function isAvailable(): bool
     {
-        if (!$this->isCasted()) {
-            return false;
-        }
-
-        if ($this->isWhite() === $isWhite) {
-            return false === $this->isCaptured();
-        }
-
-        return true === $this->isCaptured();
+        return false === $this->isCaptured() && true === $this->isCasted();
     }
 
     public function __toString()
