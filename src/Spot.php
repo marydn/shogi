@@ -54,9 +54,33 @@ final class Spot
         return boolval($this->piece);
     }
 
+    public function capturePiece(): void
+    {
+        $this->piece()->capture();
+    }
+
+    public function isPromotionArea(): bool
+    {
+        if ($this->pieceIsWhite()) {
+            return $this->y() > 5;
+        }
+
+        return $this->y() < 3;
+    }
+
     public function pieceIsWhite(): bool
     {
         return $this->piece() ? $this->piece()->isWhite() : false;
+    }
+
+    public function pieceIsPromoted(): bool
+    {
+        return $this->piece() ? $this->piece()->isPromoted() : false;
+    }
+
+    public function pieceIsAvailableFor(bool $isWhite): bool
+    {
+        return $this->piece()->isAvailableFor($isWhite);
     }
 
     public function x()
@@ -69,8 +93,23 @@ final class Spot
         return $this->coordinate->y();
     }
 
+    public function readableX(): int
+    {
+        return $this->coordinate->readableCoordinate->x();
+    }
+
+    public function readableY(): string
+    {
+        return $this->coordinate->readableCoordinate->y();
+    }
+
+    public function readableXY(): string
+    {
+        return sprintf('%s%s', $this->readableY(), $this->readableX());
+    }
+
     public function __toString()
     {
-        return (string) $this->piece();
+        return sprintf('%s%s', $this->y(), $this->x());
     }
 }

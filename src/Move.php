@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shogi;
 
 use Shogi\Exception\IllegalMove;
+use Shogi\Pieces\PiecePromotableInterface;
 
 final class Move
 {
@@ -44,8 +45,16 @@ final class Move
             throw new IllegalMove;
         }
 
+        if ($this->target->isTaken()) {
+            $this->target->capturePiece();
+        }
+
         $this->source->removePiece();
         $this->target->fill($piece);
+
+        if ($this->target->isPromotionArea() && $piece instanceof PiecePromotableInterface) {
+            $piece->promote();
+        }
 
         $this->notation = new Notation($this->player, $piece, $this->source, $this->target);
     }
