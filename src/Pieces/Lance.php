@@ -38,16 +38,12 @@ final class Lance extends BasePiece implements PieceInterface
             $isMovingForward = $x === 0 && $y > 0;
         }
 
-        $spacesInBetween = range($source->y(), $target->x());
-        $isThereAnyPieceInBetween = false;
-        foreach ($spacesInBetween as $spaceToCheck) {
-            if ($board->pieceFromSpot(sprintf('%s%s', $spaceToCheck, $source->x()))) {
-                $isThereAnyPieceInBetween = true;
-                break;
-            }
+        if (!$isMovingForward) {
+            return false;
         }
 
-        if (!$isMovingForward || $isThereAnyPieceInBetween) {
+        $isBusy = $this->isPathBusy($board, $source->readableX(), $source->readableY(), $target->readableY());
+        if ($isBusy) {
             return false;
         }
 
@@ -57,5 +53,18 @@ final class Lance extends BasePiece implements PieceInterface
     public function canBePromoted(): bool
     {
         return self::IS_PROMOTABLE;
+    }
+
+    private function isPathBusy(Board $board, $x, $start, $end): bool
+    {
+        $spacesInBetween = range($start, $end);
+
+        foreach ($spacesInBetween as $spaceToCheck) {
+            if ($board->pieceFromSpot(sprintf('%s%s', $spaceToCheck, $x))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
