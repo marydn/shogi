@@ -7,10 +7,12 @@ use Shogi\Spot;
 
 interface PieceInterface
 {
-    public function canMove(Board $board, Spot $from, Spot $to): bool;
+    public function isMoveAllowed(Board $board, Spot $from, Spot $to): bool;
     public function isWhite(): bool;
     public function isCaptured(): bool;
     public function isPromoted(): bool;
-    public function capture(): void;
-    public function promote(): void;
+    public function isCasted(): bool;
+    public function capture(): PieceInterface;
+    public function promote(): PieceInterface;
+    public function cast(): PieceInterface;
 }
