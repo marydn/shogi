@@ -9,9 +9,10 @@ use Shogi\Spot;
 
 abstract class BasePiece
 {
+    const CAPTURED_SYMBOL = '*';
+
     protected bool $isWhite = false;
     protected bool $isCaptured = false;
-    protected bool $isPromoted = false;
     protected bool $isCasted = false;
 
     public function __construct(bool $isWhite)
@@ -19,13 +20,11 @@ abstract class BasePiece
         $this->isWhite = $isWhite;
     }
 
-    abstract public function isMoveAllowed(Board $board, Spot $from, Spot $to): bool;
-
-    abstract public function canBePromoted(): bool;
+    abstract public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool;
 
     final public function isWhite(): bool
     {
-        return $this->isWhite;
+        return $this->isWhite || (false === $this->isWhite && true === $this->isCaptured);
     }
 
     final public function isCaptured(): bool
@@ -33,21 +32,9 @@ abstract class BasePiece
         return $this->isCaptured;
     }
 
-    final public function isPromoted(): bool
-    {
-        return $this->isPromoted;
-    }
-
     final public function isCasted(): bool
     {
         return $this->isCasted;
-    }
-
-    final public function promote(): PieceInterface
-    {
-        $this->isPromoted = true;
-
-        return $this;
     }
 
     final public function capture(): PieceInterface
@@ -64,8 +51,21 @@ abstract class BasePiece
         return $this;
     }
 
+    public function isAvailableFor(bool $isWhite): bool
+    {
+        if (!$this->isCasted()) {
+            return false;
+        }
+
+        if ($this->isWhite() === $isWhite) {
+            return false === $this->isCaptured();
+        }
+
+        return true === $this->isCaptured();
+    }
+
     public function __toString()
     {
-        return static::NAME;
+        return sprintf('%s%s', $this->isCaptured ? self::CAPTURED_SYMBOL : '', static::NAME);
     }
 }
