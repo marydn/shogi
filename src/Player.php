@@ -17,13 +17,14 @@ final class Player
 {
     private string $name;
     private bool $isWhite;
+    private PlayerInventory $inventory;
 
     public function __construct(string $name, bool $isWhite = false)
     {
-        $this->name = $name;
+        $this->name    = $name;
         $this->isWhite = $isWhite;
 
-        $this->initialInventory();
+        $this->initializeInventory();
     }
 
     public function name(): string
@@ -36,7 +37,94 @@ final class Player
         return $this->isWhite;
     }
 
-    private function initialInventory(): array
+    public function inventory(): PlayerInventory
+    {
+        return $this->inventory;
+    }
+
+    public function putPiecesOnBoard(Board $board): Player
+    {
+        foreach ($this->inventory as $piece) {
+            if ($piece->isCasted()) {
+                continue;
+            }
+
+            if ($piece instanceof King) {
+                $board->fillSpotAndCastPiece($this->isWhite ? 'A5' : 'I5', $piece);
+            }
+
+            if ($piece instanceof Lance) {
+                $target = $this->isWhite ? 'A9' : 'I9';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+
+                $target = $this->isWhite ? 'A1' : 'I1';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+            }
+
+            if ($piece instanceof Knight) {
+                $target = $this->isWhite ? 'A8' : 'I8';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+
+                $target = $this->isWhite ? 'A2' : 'I2';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+            }
+
+            if ($piece instanceof SilverGeneral) {
+                $target = $this->isWhite ? 'A7' : 'I7';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+
+                $target = $this->isWhite ? 'A3' : 'I3';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+            }
+
+            if ($piece instanceof GoldGeneral) {
+                $target = $this->isWhite ? 'A6' : 'I6';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+
+                $target = $this->isWhite ? 'A4' : 'I4';
+                if (!$board->spotContainsPiece($target, $piece)) {
+                    $board->fillSpotAndCastPiece($target, $piece);
+                }
+            }
+
+            if ($piece instanceof Bishop) {
+                $target = $this->isWhite ? 'B8' : 'H2';
+                $board->fillSpotAndCastPiece($target, $piece);
+            }
+
+            if ($piece instanceof Rook) {
+                $target = $this->isWhite ? 'B2' : 'H8';
+                $board->fillSpotAndCastPiece($target, $piece);
+            }
+
+            if ($piece instanceof Pawn) {
+                for($i = 9; $i >= 1; $i--) {
+                    $target = $this->isWhite ? 'C'.$i : 'G'.$i;
+                    if (!$board->spotContainsPiece($target, $piece)) {
+                        $board->fillSpotAndCastPiece($target, $piece);
+                    }
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    private function initializeInventory(): void
     {
         $bigPieces = [
             new King($this->isWhite),
@@ -55,7 +143,7 @@ final class Player
 
         $pawns = array_fill(0, 9, new Pawn($this->isWhite));
 
-        return [...$bigPieces, ...$pawns];
+        $this->inventory = new PlayerInventory([...$bigPieces, ...$pawns]);
     }
 
     public function __toString()
