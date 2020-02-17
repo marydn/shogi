@@ -91,8 +91,8 @@ final class BishopTest extends TestCase
         $game->currentPlayerMove('C9xD9'); // white
         $game->currentPlayerMove('H8xD4'); // black - Bishop up right
         $game->currentPlayerMove('D9xE9'); // white
-        $game->currentPlayerMove('D4xF1'); // black - Bishop down right
+        $game->currentPlayerMove('D4xF2'); // black - Bishop down right
 
-        $this->assertEquals($piece, $game->pieceFromSpot('F1'));
+        $this->assertEquals($piece, $game->pieceFromSpot('F2'));
     }
 }

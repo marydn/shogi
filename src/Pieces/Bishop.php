@@ -65,15 +65,15 @@ final class Bishop extends BasePiece implements PieceInterface, PiecePromotableI
 
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
-        $x = $source->y();
+        $x = $source->x();
         $y = $source->y();
 
         $counter = 0;
-        while ($x !== $target->x() && $y !== $target->y() && $counter < 9) {
+        do {
             $x = $source->x() > $target->x() ? $x - 1 : $x + 1;
             $y = $source->y() > $target->y() ? $y - 1 : $y + 1;
 
-            $readableX = $x + 1;
+            $readableX = abs($x - 9);
             $readableY = Coordinate::LETTERS[$y];
 
             if ($board->pieceFromSpot(sprintf('%s%s', $readableY, $readableX))) {
@@ -81,7 +81,7 @@ final class Bishop extends BasePiece implements PieceInterface, PiecePromotableI
             }
 
             $counter++;
-        }
+        } while ($x !== $target->x() && $y !== $target->y() && $counter < 9);
 
         return false;
     }
