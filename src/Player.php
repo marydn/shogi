@@ -10,6 +10,7 @@ use Shogi\Pieces\King;
 use Shogi\Pieces\Knight;
 use Shogi\Pieces\Lance;
 use Shogi\Pieces\Pawn;
+use Shogi\Pieces\PieceInterface;
 use Shogi\Pieces\Rook;
 use Shogi\Pieces\SilverGeneral;
 
@@ -40,6 +41,11 @@ final class Player
     public function inventory(): PlayerInventory
     {
         return $this->inventory;
+    }
+
+    public function capturePiece(PieceInterface $piece)
+    {
+        $piece->capture();
     }
 
     public function putPiecesOnBoard(Board $board): Player
@@ -102,12 +108,12 @@ final class Player
             }
 
             if ($piece instanceof Bishop) {
-                $target = $this->isWhite ? 'B8' : 'H2';
+                $target = $this->isWhite ? 'B2' : 'H8';
                 $board->fillSpotAndCastPiece($target, $piece);
             }
 
             if ($piece instanceof Rook) {
-                $target = $this->isWhite ? 'B2' : 'H8';
+                $target = $this->isWhite ? 'B8' : 'H2';
                 $board->fillSpotAndCastPiece($target, $piece);
             }
 
