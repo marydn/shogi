@@ -6,7 +6,7 @@ namespace src\Pieces;
 
 use PHPUnit\Framework\TestCase;
 
-final class LanceTest extends TestCase
+final class LanceTest
 {
 
 }
