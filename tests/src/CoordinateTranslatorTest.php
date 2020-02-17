@@ -98,4 +98,22 @@ final class CoordinateTranslatorTest extends TestCase
 
         $this->assertEquals(1, $source->x() - $target->x());
     }
+
+    /** @test */
+    public function it_should_translate_input_to_a_valid_spot_coordinate9(): void
+    {
+        $source = new CoordinateTranslator('G6');
+
+        $this->assertEquals(3, $source->x());
+        $this->assertEquals(6, $source->y());
+    }
+
+    /** @test */
+    public function it_should_translate_input_to_a_valid_spot_coordinate10(): void
+    {
+        $source = new CoordinateTranslator('G2');
+
+        $this->assertEquals(7, $source->x());
+        $this->assertEquals(6, $source->y());
+    }
 }
