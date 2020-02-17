@@ -66,4 +66,17 @@ final class GameTest extends TestCase
         $game = new Game;
         $game->currentPlayerMove($userInput);
     }
+
+    /** @test */
+    public function it_should_capture_a_pawn(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('c1');
+        $player = $game->playerBlack();
+
+        $player->capturePiece($piece);
+
+        $this->assertCount(1, $player->captures());
+    }
 }
