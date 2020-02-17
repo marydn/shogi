@@ -16,36 +16,83 @@ final class BishopTest extends TestCase
         $this->expectException(IllegalMove::class);
 
         $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
+        $game->currentPlayerMove('G8xF8'); // black
         $game->currentPlayerMove('C9xD9'); // white
-        $game->currentPlayerMove('H2xG2');
+        $game->currentPlayerMove('H8xG8');
     }
 
     /** @test */
-    public function it_should_move_diagonally_one_step_to_the_left(): void
+    public function it_should_move_diagonally_one_step_to_the_left_for_black(): void
     {
         $game = new Game;
 
-        $piece = $game->pieceFromSpot('H2');
+        $piece = $game->pieceFromSpot('H8');
 
-        $game->currentPlayerMove('G3xF3'); // black
+        $game->currentPlayerMove('G9xF9'); // black
         $game->currentPlayerMove('C9xD9'); // white
-        $game->currentPlayerMove('H2xG3');
+        $game->currentPlayerMove('H8xG9');
 
-        $this->assertEquals($piece, $game->pieceFromSpot('G3'));
+        $this->assertEquals($piece, $game->pieceFromSpot('G9'));
     }
 
     /** @test */
-    public function it_should_move_diagonally_four_steps_to_the_left(): void
+    public function it_should_move_diagonally_four_steps_to_the_right_for_black(): void
     {
         $game = new Game;
 
-        $piece = $game->pieceFromSpot('H2');
+        $piece = $game->pieceFromSpot('H8');
 
-        $game->currentPlayerMove('G3xF3'); // black
+        $game->currentPlayerMove('G7xF7'); // black
         $game->currentPlayerMove('C9xD9'); // white
-        $game->currentPlayerMove('H2xD6');
+        $game->currentPlayerMove('H8xD4');
 
-        $this->assertEquals($piece, $game->pieceFromSpot('D6'));
+        $this->assertEquals($piece, $game->pieceFromSpot('D4'));
+    }
+
+    /** @test */
+    public function it_should_move_diagonally_one_step_to_the_left_for_white(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('B2');
+
+        $game->currentPlayerMove('G1xF1'); // black
+        $game->currentPlayerMove('C1xD1'); // white
+        $game->currentPlayerMove('F1xE1'); // black
+
+        $game->currentPlayerMove('B2xC1');
+
+        $this->assertEquals($piece, $game->pieceFromSpot('C1'));
+    }
+
+    /** @test */
+    public function it_should_move_diagonally_four_steps_to_the_left_for_white(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('B2');
+
+        $game->currentPlayerMove('G1xF1'); // black
+        $game->currentPlayerMove('C3xD3'); // white
+        $game->currentPlayerMove('F1xE1'); // black
+        $game->currentPlayerMove('B2xF6');
+
+        $this->assertEquals($piece, $game->pieceFromSpot('F6'));
+    }
+
+    /** @test */
+    public function it_should_move_diagonally_right_up_and_then_right_down_for_black(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('H8');
+
+        $game->currentPlayerMove('G7xF7'); // black
+        $game->currentPlayerMove('C9xD9'); // white
+        $game->currentPlayerMove('H8xD4'); // black
+        $game->currentPlayerMove('D9xE9'); // white
+        $game->currentPlayerMove('D4xF1'); // black
+
+        $this->assertEquals($piece, $game->pieceFromSpot('F1'));
     }
 }
