@@ -20,23 +20,15 @@ final class RookTest extends TestCase
     }
 
     /** @test */
-    public function it_should_move_a_rook_straight_front(): void
-    {
-        $pawn = new Rook(false);
-
-        $this->assertInstanceOf(Rook::class, $pawn);
-    }
-
-    /** @test */
     public function it_should_move_straight_one_step(): void
     {
         $game = new Game;
 
-        $piece = $game->pieceFromSpot('H8');
+        $piece = $game->pieceFromSpot('H2');
 
-        $game->currentPlayerMove('H8xH7');
+        $game->currentPlayerMove('H2xH3');
 
-        $this->assertEquals($piece, $game->pieceFromSpot('H7'));
+        $this->assertEquals($piece, $game->pieceFromSpot('H3'));
     }
 
     /** @test */
@@ -44,11 +36,11 @@ final class RookTest extends TestCase
     {
         $game = new Game;
 
-        $piece = $game->pieceFromSpot('H8');
+        $piece = $game->pieceFromSpot('H2');
 
-        $game->currentPlayerMove('H8xH3');
+        $game->currentPlayerMove('H2xH7');
 
-        $this->assertEquals($piece, $game->pieceFromSpot('H3'));
+        $this->assertEquals($piece, $game->pieceFromSpot('H7'));
     }
 
     /** @test */
@@ -57,6 +49,6 @@ final class RookTest extends TestCase
         $this->expectException(IllegalMove::class);
 
         $game = new Game;
-        $game->currentPlayerMove('H8xH2');
+        $game->currentPlayerMove('H2xH8');
     }
 }
