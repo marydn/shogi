@@ -5,15 +5,7 @@ declare(strict_types=1);
 namespace Shogi;
 
 use Shogi\Exception\IllegalMove;
-use Shogi\Pieces\Bishop;
-use Shogi\Pieces\GoldGeneral;
-use Shogi\Pieces\King;
-use Shogi\Pieces\Knight;
-use Shogi\Pieces\Lance;
-use Shogi\Pieces\Pawn;
 use Shogi\Pieces\PieceInterface;
-use Shogi\Pieces\Rook;
-use Shogi\Pieces\SilverGeneral;
 
 final class Game
 {
