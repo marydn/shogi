@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  php:
+    container_name: shogi-php
+    build:
+      context: .
+      dockerfile: ./etc/php/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "9000:9001"
+    volumes:
+      - .:/app:delegated
