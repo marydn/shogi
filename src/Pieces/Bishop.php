@@ -6,6 +6,7 @@ namespace Shogi\Pieces;
 
 use Shogi\Board;
 use Shogi\Spot;
+use Shogi\ValueObject\Coordinate;
 
 /**
  * Bishop's behaviour:
@@ -64,15 +65,22 @@ final class Bishop extends BasePiece implements PieceInterface, PiecePromotableI
 
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
-        $xs = range($source->readableX(), $target->readableX());
-        $ys = range($source->readableY(), $target->readableY());
+        $x = $source->y();
+        $y = $source->y();
 
-        foreach ($xs as $x) {
-            foreach ($ys as $y) {
-                if ($board->pieceFromSpot(sprintf('%s%s', $y, $x))) {
-                    return true;
-                }
+        $counter = 0;
+        while ($x !== $target->x() && $y !== $target->y() && $counter < 9) {
+            $x = $source->x() > $target->x() ? $x - 1 : $x + 1;
+            $y = $source->y() > $target->y() ? $y - 1 : $y + 1;
+
+            $readableX = $x + 1;
+            $readableY = Coordinate::LETTERS[$y];
+
+            if ($board->pieceFromSpot(sprintf('%s%s', $readableY, $readableX))) {
+                return true;
             }
+
+            $counter++;
         }
 
         return false;
