@@ -9,59 +9,45 @@ use Shogi\Pieces\PiecePromotableInterface;
 
 final class Move
 {
-    private Board $board;
-    private Player $player;
-    private Spot $source;
-    private Spot $target;
     private Notation $notation;
-
-    public function __construct(Board $board, Player $player, Spot $source, Spot $target)
-    {
-        $this->board  = $board;
-        $this->player = $player;
-        $this->source = $source;
-        $this->target = $target;
-
-        $this->make();
-    }
-
-    public function notation(): Notation
-    {
-        return $this->notation;
-    }
 
     /**
      * @throws IllegalMove
      */
-    private function make()
+    public function __construct(Board $board, Player $player, Spot $source, Spot $target)
     {
-        $piece = $this->source->piece();
+        $piece = $source->piece();
         if (!$piece) {
             throw new IllegalMove;
         }
 
-        if (!$this->player->ownsAPiece($piece)) {
+        if (!$player->ownsAPiece($piece)) {
             throw new IllegalMove;
         }
 
-        $canMove = $piece->isMoveAllowed($this->board, $this->source, $this->target);
+        $canMove = $piece->isMoveAllowed($board, $source, $target);
         if (!$canMove) {
             throw new IllegalMove;
         }
 
-        if ($this->target->isTaken()) {
-            $targetPiece = $this->target->piece();
-            $this->target->removePiece();
-            $this->player->capturePiece($targetPiece);
+        if ($target->isTaken()) {
+            $targetPiece = $target->piece();
+            $target->removePiece();
+            $player->capturePiece($targetPiece);
         }
 
-        $this->source->removePiece();
-        $this->target->fill($piece);
+        $source->removePiece();
+        $target->fill($piece);
 
-        if ($this->target->isPromotionArea() && $piece instanceof PiecePromotableInterface) {
+        if ($target->isPromotionArea() && $piece instanceof PiecePromotableInterface) {
             $piece->promote();
         }
 
-        $this->notation = new Notation($this->player, $piece, $this->source, $this->target);
+        $this->notation = new Notation($player, $piece, $source, $target);
+    }
+
+    public function __toString()
+    {
+        return (string) $this->notation;
     }
 }

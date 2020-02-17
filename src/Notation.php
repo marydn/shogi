@@ -14,15 +14,6 @@ final class Notation
     const PROMOTED   = '+';
     const UNPROMOTED = '=';
 
-    const KING           = 'K';
-    const ROOK           = 'R';
-    const BISHOP         = 'B';
-    const GOLD_GENERAL   = 'G';
-    const SILVER_GENERAL = 'S';
-    const KNIGHT         = 'N';
-    const LANCE          = 'L';
-    const PAWN           = 'P';
-
     private Player $player;
     private PieceInterface $piece;
     private Spot $source;
@@ -34,5 +25,20 @@ final class Notation
         $this->piece  = $piece;
         $this->source = $source;
         $this->target = $target;
+    }
+
+    private function from(): string
+    {
+        return $this->source->readableXY().self::SIMPLE;
+    }
+
+    private function to(): string
+    {
+        return $this->target->readableXY();
+    }
+
+    public function __toString()
+    {
+        return sprintf('%s%s%s', $this->piece, $this->from(), $this->to());
     }
 }
