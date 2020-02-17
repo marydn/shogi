@@ -15,6 +15,6 @@ final class MovesList extends Collection
 
     public function add(Move $move)
     {
-        new self([...$this->items(), ...[$move]]);
+        $this->items = [...$this->items(), ...[$move]];
     }
 }

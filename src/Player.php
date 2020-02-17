@@ -19,11 +19,13 @@ final class Player
     private string $name;
     private bool $isWhite;
     private PlayerInventory $inventory;
+    private PlayerInventory $capturedPieces;
 
     public function __construct(string $name, bool $isWhite = false)
     {
-        $this->name    = $name;
-        $this->isWhite = $isWhite;
+        $this->name           = $name;
+        $this->isWhite        = $isWhite;
+        $this->capturedPieces = new PlayerInventory();
 
         $this->initializeInventory();
     }
@@ -38,14 +40,19 @@ final class Player
         return $this->isWhite;
     }
 
-    public function inventory(): PlayerInventory
-    {
-        return $this->inventory;
-    }
-
     public function capturePiece(PieceInterface $piece)
     {
-        $piece->capture();
+        $this->capturedPieces->add($piece);
+    }
+
+    public function captures(): PlayerInventory
+    {
+        return $this->capturedPieces;
+    }
+
+    public function ownsAPiece(PieceInterface $piece)
+    {
+        return $this->inventory->contains($piece);
     }
 
     public function putPiecesOnBoard(Board $board): Player

@@ -14,8 +14,8 @@ final class PlayerInventory extends Collection
         return PieceInterface::class;
     }
 
-    public function add(PieceInterface $piece)
+    public function add(PieceInterface $piece): void
     {
-        new self([...$this->items(), ...[$piece]]);
+        $this->items = [...$this->items(), ...[$piece]];
     }
 }

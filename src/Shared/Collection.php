@@ -6,7 +6,7 @@ namespace Shogi\Shared;
 
 abstract class Collection implements \Countable, \IteratorAggregate
 {
-    private array $items;
+    protected array $items;
 
     abstract protected function getType(): string;
 
@@ -30,6 +30,11 @@ abstract class Collection implements \Countable, \IteratorAggregate
     public function count(): int
     {
         return count($this->items);
+    }
+
+    public function contains($element): bool
+    {
+        return false !== array_search($element, $this->items);
     }
 
     protected function items(): array

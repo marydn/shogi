@@ -40,13 +40,19 @@ final class Move
             throw new IllegalMove;
         }
 
+        if (!$this->player->ownsAPiece($piece)) {
+            throw new IllegalMove;
+        }
+
         $canMove = $piece->isMoveAllowed($this->board, $this->source, $this->target);
         if (!$canMove) {
             throw new IllegalMove;
         }
 
         if ($this->target->isTaken()) {
-            $this->player->capturePiece($this->target->piece());
+            $targetPiece = $this->target->piece();
+            $this->target->removePiece();
+            $this->player->capturePiece($targetPiece);
         }
 
         $this->source->removePiece();

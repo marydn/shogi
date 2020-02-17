@@ -1,10 +1,9 @@
 ## Table of Contents
 
-* [🚀Environment setup](#-environment-setup)
-  * [🐳Needed tools](#-needed-tools)
-  * [🛠️Environment configuration](#-environment-configuration)
-  * [🌍Application execution](#-application-execution)
-  * [Tests execution](#-tests-execution)
+* [Environment setup](#environment-setup)
+  * [Needed tools](#needed-tools)
+  * [Application execution](#application-execution)
+  * [Tests execution](#tests-execution)
   
 ## Environment setup
 
@@ -26,13 +25,14 @@ Execute PHP Unit tests: `make test`
 
 ## Project explanation
 
-OOP Design example for a variation of a Japanese chess version called Shogi.
+OOP Design example for a variation of a Japanese chess version called [Shogi](https://en.wikipedia.org/wiki/Shogi).
 
 Developed features:
-    - Console interactive interface
-    - Pieces placement
-    - Pieces movements
-    - Pieces captures
+
+  * Console interactive interface
+  * Pieces placement
+  * Pieces movements
+  * Capture opponent's pieces
     
 ```bash
 $ tree -L 4 src
@@ -59,7 +59,7 @@ src
 │   ├── Lance.php
 │   ├── Pawn.php
 │   ├── PieceInterface.php
-│   ├── PiecePromotableInterface.php
+│   ├── PiecePromotableInterface.php // This Interface is for pieces that can be promoted
 │   ├── Rook.php
 │   └── SilverGeneral.php
 ├── PlayerInventory.php // Player's inventory

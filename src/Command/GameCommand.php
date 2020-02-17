@@ -44,36 +44,35 @@ final class GameCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $helper = $this->getHelper('question');
 
-        $output->writeln('Enter moves using notation: from x to');
-        $output->writeln('For example: C1xD1');
+        $error = null;
 
         do {
             $this->draw();
 
+            if ($error) {
+                $output->writeln(['', $error, '']);
+                $error = null;
+            }
+
+            $output->writeln('<comment>Enter moves using notation: from x to. For example: C1xD1</comment>');
+
             $question = new Question(sprintf('<question>Turn for %s. Enter move:</question> ', $this->game->currentPlayer()));
 
-            $nextMove = $helper->ask($input, $output, $question);
+            $nextMove = $this->getHelper('question')->ask($input, $output, $question);
             if ($nextMove) {
                 $command = array_search($nextMove, self::COMMANDS);
                 if (false === $command) {
                     try {
                         $this->game->currentPlayerMove($nextMove);
                     } catch (\Throwable $exception) {
-                        $this->output->writeln(sprintf('<illegal-move>%s</>', $exception->getMessage()));
+                        $error = sprintf('<illegal-move>%s</>', $exception->getMessage());
                     }
                 }
             }
         } while (!$this->game->hasEnded() && $nextMove !== 'quit');
 
         return 0;
-    }
-
-    private function draw(): void
-    {
-        $this->drawBoard();
-        $this->drawResults();
     }
 
     private function arrayDecorator(array $array, $tag = 'info'): array
@@ -83,12 +82,13 @@ final class GameCommand extends Command
         }, $array);
     }
 
-    private function drawBoard()
+    private function draw()
     {
         $letters = $this->arrayDecorator(range('a', 'i'));
         $numbers = $this->arrayDecorator(range(9, 1));
 
         $table = new Table($this->output);
+        $table->setStyle('box');
         $table->setHeaders([$numbers]);
 
         $positions = $this->game->positions();
@@ -105,15 +105,23 @@ final class GameCommand extends Command
         }
 
         $table->render();
+
+        $this->drawCaptures();
     }
 
-    private function drawResults()
+    private function drawCaptures(): void
     {
         $table = new Table($this->output);
-        $table->setStyle('box-double');
+        $table->setStyle('box');
+        $table->setHeaders(['Black Player Captures', 'White Player Captures']);
 
-        $table->addRows($this->game->moves()->toArray());
+        $black = $this->game->blackPlayerCaptures()->toArray();
+        $black = implode(' - ', $black);
 
+        $white = $this->game->whitePlayerCaptures()->toArray();
+        $white = implode(' - ', $white);
+
+        $table->addRow([$black, $white]);
         $table->render();
     }
 }

@@ -79,6 +79,16 @@ final class Game
         $this->playerMakesAMove($this->opposingPlayer(), $notation);
     }
 
+    public function whitePlayerCaptures(): PlayerInventory
+    {
+        return $this->playerWhite()->captures();
+    }
+
+    public function blackPlayerCaptures(): PlayerInventory
+    {
+        return $this->playerBlack()->captures();
+    }
+
     public function hasEnded(): bool
     {
         return false;
@@ -94,9 +104,9 @@ final class Game
         $sourceSpot = $this->board->spot($source);
         $targetSpot = $this->board->spot($target);
 
-        $this->moves->add(
-            new Move($this->board, $player, $sourceSpot, $targetSpot)
-        );
+        $move = new Move($this->board, $player, $sourceSpot, $targetSpot);
+
+        $this->moves->add($move);
 
         $this->flipTurn();
     }
