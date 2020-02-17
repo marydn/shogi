@@ -15,6 +15,8 @@
 4. Install PHP dependencies and bring up the project Docker containers with Docker Compose: `make build`
 5. Check everything's up using: `$ docker-composer ps`. It should show `php` service up.
 
+Note: If you want to bring down Docker service use: `make destroy`
+
 ### Application execution
 
 Start game using: `make play`
