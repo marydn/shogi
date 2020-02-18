@@ -40,19 +40,19 @@ Developed features:
 $ tree -L 4 src
 src
 ├── Board.php
-├── CliPrintableSpot.php // Decorator for console output
+├── CliPrintableSpot.php # Decorator for console output
 ├── Command
-│   └── GameCommand.php // Console output application
-├── CoordinateTranslator.php // Translate user's input to a valid coordinate to handle internally
+│   └── GameCommand.php # Console output application
+├── CoordinateTranslator.php # Translate user's input to a valid coordinate to handle internally
 ├── Exception
 │   ├── CoordinateNotFound.php
 │   ├── CoordinateNotWellFormedNotation.php
 │   └── IllegalMove.php
 ├── Game.php
 ├── Move.php
-├── MovesList.php // Collection of Moves
-├── Notation.php // Every move is saved as a Notation object
-├── Pieces // Every piece in the Board
+├── MovesList.php # Collection of Moves
+├── Notation.php # Every move is saved as a Notation object
+├── Pieces # Every piece in the Board
 │   ├── BasePiece.php
 │   ├── Bishop.php
 │   ├── GoldGeneral.php
@@ -61,16 +61,16 @@ src
 │   ├── Lance.php
 │   ├── Pawn.php
 │   ├── PieceInterface.php
-│   ├── PiecePromotableInterface.php // This Interface is for pieces that can be promoted
+│   ├── PiecePromotableInterface.php # This Interface is for pieces that can be promoted
 │   ├── Rook.php
 │   └── SilverGeneral.php
-├── PlayerInventory.php // Player's inventory
-├── Player.php // Every player of the game
+├── PlayerInventory.php # Player's inventory
+├── Player.php # Every player of the game
 ├── Shared
-│   └── Collection.php // Abstract class for Objects that holds collections
-├── Spot.php   // Every spot in the Board
+│   └── Collection.php # Abstract class for Objects that holds collections
+├── Spot.php   # Every spot in the Board
 └── ValueObject
-    └── Coordinate.php  // User's input
+    └── Coordinate.php  # User's input
 ```
 
 ![image info](./doc/images/demo.png)
