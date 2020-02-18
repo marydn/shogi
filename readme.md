@@ -21,6 +21,8 @@ Note: If you want to bring down Docker service use: `make destroy`
 
 Start game using: `make play`
 
+End the game at any time by writing `quit` instead of entering a new move.
+
 ### Tests execution
 
 Execute PHP Unit tests: `make test`
