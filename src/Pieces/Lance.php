@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shogi\Pieces;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Shogi\Board;
 use Shogi\Spot;
 
@@ -72,7 +73,13 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
         $spacesInBetween = range($source->readableY(), $target->readableY());
 
         foreach ($spacesInBetween as $spaceToCheck) {
-            if ($board->pieceFromSpot(sprintf('%s%s', $spaceToCheck, $source->x()))) {
+            $coordinate = sprintf('%s%s', $spaceToCheck, $source->readableX());
+
+            if ($coordinate === $source->readableXY()) {
+                continue;
+            }
+
+            if ($board->pieceFromSpot($coordinate)) {
                 return true;
             }
         }
