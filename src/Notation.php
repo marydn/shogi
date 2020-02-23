@@ -5,31 +5,48 @@ declare(strict_types=1);
 namespace Shogi;
 
 use Shogi\Pieces\PieceInterface;
+use Shogi\ValueObject\NotationType;
 
 final class Notation
 {
-    const SIMPLE     = '-';
-    const CAPTURE    = 'x';
-    const DROP       = '*';
-    const PROMOTED   = '+';
-    const UNPROMOTED = '=';
-
     private Player $player;
     private PieceInterface $piece;
-    private Spot $source;
+    private ?Spot $source;
     private Spot $target;
+    private NotationType $type;
 
-    public function __construct(Player $player, PieceInterface $piece, Spot $source, Spot $target)
+    private function __construct(Player $player, NotationType $type, PieceInterface $piece, ?Spot $source, Spot $target)
     {
         $this->player = $player;
+        $this->type   = $type;
         $this->piece  = $piece;
         $this->source = $source;
         $this->target = $target;
     }
 
+    public static function annotateCapture(Player $player, PieceInterface $piece, Spot $source, Spot $target)
+    {
+        return new self($player, NotationType::capture(), $piece, $source, $target);
+    }
+
+    public static function annotateSimple(Player $player, PieceInterface $piece, Spot $source, Spot $target)
+    {
+        return new self($player, NotationType::simple(), $piece, $source, $target);
+    }
+
+    public static function annotatePromoted(Player $player, PieceInterface $piece, Spot $source, Spot $target)
+    {
+        return new self($player, NotationType::promoted(), $piece, $source, $target);
+    }
+
+    public static function annotateDrop(Player $player, PieceInterface $piece, Spot $target)
+    {
+        return new self($player, NotationType::drop(), $piece, null, $target);
+    }
+
     private function from(): string
     {
-        return $this->source->readableXY().self::SIMPLE;
+        return $this->source->readableXY();
     }
 
     private function to(): string
