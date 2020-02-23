@@ -95,4 +95,18 @@ final class BishopTest extends TestCase
 
         $this->assertEquals($piece, $game->pieceFromSpot('F2'));
     }
+
+    /** @test */
+    public function it_should_capture_a_piece(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('C3');
+
+        $game->currentPlayerMove('G7xF7');
+        $game->currentPlayerMove('C1xD1');
+        $game->currentPlayerMove('H8xC3');
+
+        $this->assertContains($piece, $game->blackPlayerCaptures());
+    }
 }

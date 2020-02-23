@@ -74,4 +74,20 @@ final class RookTest extends TestCase
 
         $this->assertEquals($piece, $game->pieceFromSpot('G2'));
     }
+
+    /** @test */
+    public function it_should_capture_a_piece(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('C2');
+
+        $game->currentPlayerMove('G2xF2'); // black
+        $game->currentPlayerMove('C2xD2'); // white
+        $game->currentPlayerMove('F2xE2'); // black
+        $game->currentPlayerMove('D2xE2'); // white captures pawn
+        $game->currentPlayerMove('H2xE2'); // rook captures
+
+        $this->assertContains($piece, $game->blackPlayerCaptures());
+    }
 }
