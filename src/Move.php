@@ -62,8 +62,7 @@ final class Move
         }
 
         if ($target->isTaken()) {
-            $targetPiece = $target->piece();
-            $player->capture($targetPiece);
+            $player->capture($target->piece());
         }
 
         $source->removePiece();

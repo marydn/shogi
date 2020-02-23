@@ -13,6 +13,7 @@ use Shogi\Pieces\Knight;
 use Shogi\Pieces\Lance;
 use Shogi\Pieces\Pawn;
 use Shogi\Pieces\PieceInterface;
+use Shogi\Pieces\PiecePromotableInterface;
 use Shogi\Pieces\Rook;
 use Shogi\Pieces\SilverGeneral;
 
@@ -44,6 +45,11 @@ final class Player
     public function capture(PieceInterface $piece)
     {
         $piece->capture();
+
+        if ($piece instanceof PiecePromotableInterface && $piece->isPromoted()) {
+            $piece->demote();
+        }
+
         $this->capturedPieces->add($piece);
     }
 
