@@ -5,7 +5,8 @@
   * [Application execution](#application-execution)
   * [Tests execution](#tests-execution)
 * [Project explanation](#project-explanation)
-  * [Developed features](#developed-features)
+  * [Diving project structure](#diving-project-structure)
+  * [UI Preview](#ui-preview)
   
 ## Environment setup
 
@@ -40,7 +41,9 @@ OOP Design example for a variation of a Japanese chess version called [Shogi](ht
   * Pieces movements
   * Capture opponent's pieces (only Pawns, Rooks and Bishops)
   * Reinsert pieces into the game (only Pawns)
-    
+
+### Diving project structure:
+
 ```bash
 $ tree -L 4 src
 src
@@ -81,5 +84,7 @@ src
     ├── Coordinate.php # User's input
     └── NotationType.php # ValueObject to identify the type of move
 ```
+
+### UI Preview:
 
 ![image info](./doc/images/demo.png)
