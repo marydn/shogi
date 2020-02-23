@@ -118,7 +118,7 @@ final class Game
 
             $targetSpot = $this->spotFromBoard($target);
 
-            $canDrop = $piece->isDropAllowed($this->board, $targetSpot);
+            $canDrop = $piece->isDropAllowed($this->board, $piece, $targetSpot);
             if (!$canDrop) {
                 throw new IllegalMove('Drop is not allowed');
             }

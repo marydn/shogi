@@ -59,10 +59,29 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
         return $this;
     }
 
-    public function isDropAllowed(Board $board, Spot $target): bool
+    public function isDropAllowed(Board $board, PieceInterface $pieceToDrop, Spot $target): bool
     {
         if ($target->isTaken() || $target->isPromotionArea()) {
             return false;
+        }
+
+        $row = $target->x();
+        $ys = range('A', 'I');
+
+        foreach ($ys as $y) {
+            $coordinate = sprintf('%s%s', $y, $row);
+
+            $piece = $board->pieceFromSpot($coordinate);
+
+            $samePlayer = $piece->isWhite() === $pieceToDrop->isWhite();
+            $isPawn     = $piece instanceof Pawn;
+            $isPromoted = $this instanceof PiecePromotableInterface && $this->isPromoted();
+
+            if ($samePlayer && $isPawn && !$isPromoted) {
+                return false;
+            }
+
+            // @TODO: Can give check but not checkmate
         }
 
         return true;

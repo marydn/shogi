@@ -7,5 +7,5 @@ use Shogi\Spot;
 
 interface PieceDroppableInterface
 {
-    public function isDropAllowed(Board $board, Spot $target): bool;
+    public function isDropAllowed(Board $board, PieceInterface $piece, Spot $target): bool;
 }
