@@ -48,6 +48,7 @@ final class GameCommand extends Command
         $error = null;
 
         do {
+            $this->cleanScreen();
             $this->draw();
 
             if ($error) {
@@ -83,7 +84,12 @@ final class GameCommand extends Command
         }, $array);
     }
 
-    private function draw()
+    private function cleanScreen(): void
+    {
+        $this->output->write(sprintf("\033\143"));
+    }
+
+    private function draw(): void
     {
         $letters = $this->arrayDecorator(range('a', 'i'));
         $numbers = $this->arrayDecorator(range(9, 1));
