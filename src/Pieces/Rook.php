@@ -28,10 +28,6 @@ final class Rook extends BasePiece implements PieceInterface, PiecePromotableInt
             return false;
         }
 
-        if (!$this->isAvailable()) {
-            return false;
-        }
-
         if ($this->isPromoted()) {
             // @TODO: move like a Rook and add moves to diagonal Steps
         }
@@ -64,31 +60,45 @@ final class Rook extends BasePiece implements PieceInterface, PiecePromotableInt
         return $this;
     }
 
+    public function demote(): PieceInterface
+    {
+        $this->isPromoted = false;
+
+        return $this;
+    }
+
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
         $x = $source->x();
         $y = $source->y();
 
+        $isMovingY = $source->x() === $target->x();
+        $isMovingX = $source->y() === $target->y();
+
         $counter = 0;
         do {
-            if ($x === $target->x()) {
+            if ($isMovingY) {
                 $y = $source->y() > $target->y() ? $y - 1 : $y + 1;
             }
 
-            if ($y === $target->y()) {
+            if ($isMovingX) {
                 $x = $source->x() > $target->x() ? $x - 1 : $x + 1;
             }
 
-            $readableX  = abs($x - 9);
-            $readableY  = Coordinate::LETTERS[$y];
-            $coordinate = sprintf('%s%s', $readableY, $readableX);
+            $targetReached = $x === $target->x() && $y === $target->y();
 
-            if ($board->pieceFromSpot($coordinate)) {
-                return true;
+            if (!$targetReached) {
+                $readableX  = abs($x - 9);
+                $readableY  = Coordinate::LETTERS[$y];
+                $coordinate = sprintf('%s%s', $readableY, $readableX);
+
+                if ($board->pieceFromSpot($coordinate)) {
+                    return true;
+                }
             }
 
             $counter++;
-        } while (($x !== $target->x() || $y !== $target->y()) && $counter < 9);
+        } while (!$targetReached && $counter < 9);
 
         return false;
     }

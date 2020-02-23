@@ -44,7 +44,7 @@ final class RookTest extends TestCase
     }
 
     /** @test */
-    public function it_should_not_move_to_busy_spot(): void
+    public function it_should_not_move_to_a_busy_spot_of_mine(): void
     {
         $this->expectException(IllegalMove::class);
 
@@ -53,11 +53,25 @@ final class RookTest extends TestCase
     }
 
     /** @test */
-    public function it_should_not_move_over_busy_spots(): void
+    public function it_should_not_move_over_spots_filled_up_by_my_pieces(): void
     {
         $this->expectException(IllegalMove::class);
 
         $game = new Game;
         $game->currentPlayerMove('H2xH9');
+    }
+
+    /** @test */
+    public function it_should_move_straight_up(): void
+    {
+        $game = new Game;
+
+        $piece = $game->pieceFromSpot('H2');
+
+        $game->currentPlayerMove('G2xF2');
+        $game->currentPlayerMove('C9xD9');
+        $game->currentPlayerMove('H2xG2');
+
+        $this->assertEquals($piece, $game->pieceFromSpot('G2'));
     }
 }
