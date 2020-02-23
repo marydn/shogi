@@ -14,7 +14,7 @@ use Shogi\Spot;
  *  - Can move only towards Opponent's direction.
  *  - When promoted move exactly like a Gold General.
  */
-final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInterface
+final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInterface, PieceDroppableInterface
 {
     const NAME = 'P';
 
@@ -60,5 +60,10 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
         $this->isPromoted = true;
 
         return $this;
+    }
+
+    public function isDropAllowed(Board $board, Spot $target): bool
+    {
+        return true;
     }
 }
