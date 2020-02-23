@@ -80,15 +80,19 @@ final class Bishop extends BasePiece implements PieceInterface, PiecePromotableI
             $x = $source->x() > $target->x() ? $x - 1 : $x + 1;
             $y = $source->y() > $target->y() ? $y - 1 : $y + 1;
 
-            $readableX = abs($x - 9);
-            $readableY = Coordinate::LETTERS[$y];
+            $targetReached = $x === $target->x() && $y === $target->y();
 
-            if ($board->pieceFromSpot(sprintf('%s%s', $readableY, $readableX))) {
-                return true;
+            if (!$targetReached) {
+                $readableX = abs($x - 9);
+                $readableY = Coordinate::LETTERS[$y];
+
+                if ($board->pieceFromSpot(sprintf('%s%s', $readableY, $readableX))) {
+                    return true;
+                }
             }
 
             $counter++;
-        } while ($x !== $target->x() && $y !== $target->y() && $counter < 9);
+        } while (!$targetReached && $counter < 9);
 
         return false;
     }
