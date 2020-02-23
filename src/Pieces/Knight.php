@@ -61,4 +61,11 @@ final class Knight extends BasePiece implements PieceInterface, PiecePromotableI
 
         return $this;
     }
+
+    public function demote(): PieceInterface
+    {
+        $this->isPromoted = false;
+
+        return $this;
+    }
 }

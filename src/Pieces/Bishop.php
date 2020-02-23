@@ -63,6 +63,13 @@ final class Bishop extends BasePiece implements PieceInterface, PiecePromotableI
         return $this;
     }
 
+    public function demote(): PieceInterface
+    {
+        $this->isPromoted = false;
+
+        return $this;
+    }
+
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
         $x = $source->x();

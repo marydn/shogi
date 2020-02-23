@@ -68,6 +68,13 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
         return $this;
     }
 
+    public function demote(): PieceInterface
+    {
+        $this->isPromoted = false;
+
+        return $this;
+    }
+
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
         $spacesInBetween = range($source->readableY(), $target->readableY());

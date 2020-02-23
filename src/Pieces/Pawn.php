@@ -59,6 +59,13 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
         return $this;
     }
 
+    public function demote(): PieceInterface
+    {
+        $this->isPromoted = false;
+
+        return $this;
+    }
+
     public function isDropAllowed(Board $board, PieceInterface $pieceToDrop, Spot $target): bool
     {
         if ($target->isTaken() || $target->isPromotionArea()) {

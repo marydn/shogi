@@ -67,4 +67,11 @@ final class SilverGeneral extends BasePiece implements PieceInterface, PieceProm
 
         return $this;
     }
+
+    public function demote(): PieceInterface
+    {
+        $this->isPromoted = false;
+
+        return $this;
+    }
 }
