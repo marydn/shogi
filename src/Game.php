@@ -6,6 +6,7 @@ namespace Shogi;
 
 use Shogi\Exception\IllegalMove;
 use Shogi\Pieces\PieceInterface;
+use Shogi\Pieces\PiecePromotableInterface;
 
 final class Game
 {
@@ -94,19 +95,62 @@ final class Game
         return false;
     }
 
+    public function spotFromBoard(string $notation): Spot
+    {
+        return $this->board->spot($notation);
+    }
+
     /**
      * @throws IllegalMove
      */
     private function playerMakesAMove(Player $player, string $notation): void
     {
-        [$source, $target] = explode('x', strtolower($notation));
+        if (false !== stripos($notation, 'drop ')) {
+            $notation = str_replace('drop ', '', $notation);
 
-        $sourceSpot = $this->board->spot($source);
-        $targetSpot = $this->board->spot($target);
+            [$pieceName, $target] = explode(' ', strtolower($notation));
 
-        $move = new Move($this->board, $player, $sourceSpot, $targetSpot);
+            $piece = $player->takeCapturedPiece($pieceName);
 
-        $this->moves->add($move);
+            $targetSpot = $this->spotFromBoard($target);
+
+            if ($targetSpot->isTaken() || $targetSpot->isPromotionArea()) {
+                throw new IllegalMove();
+            }
+
+            $targetSpot->fill($piece);
+        } else {
+            [$source, $target] = explode('x', strtolower($notation));
+
+            $sourceSpot = $this->spotFromBoard($source);
+            $targetSpot = $this->spotFromBoard($target);
+
+            $piece = $sourceSpot->piece();
+            if (!$piece) {
+                throw new IllegalMove;
+            }
+
+            if (!$player->ownsAPiece($piece)) {
+                throw new IllegalMove;
+            }
+
+            $canMove = $piece->isMoveAllowed($this->board, $sourceSpot, $targetSpot);
+            if (!$canMove) {
+                throw new IllegalMove;
+            }
+
+            if ($targetSpot->isTaken()) {
+                $targetPiece = $targetSpot->piece();
+                $player->capture($targetPiece);
+            }
+
+            $sourceSpot->removePiece();
+            $targetSpot->fill($piece);
+
+            if ($targetSpot->isPromotionArea() && $piece instanceof PiecePromotableInterface) {
+                $piece->promote();
+            }
+        }
 
         $this->flipTurn();
     }

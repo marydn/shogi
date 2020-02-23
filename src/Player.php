@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shogi;
 
+use Shogi\Exception\CoordinateNotWellFormedNotation;
+use Shogi\Exception\PieceNotFoundInInventory;
 use Shogi\Pieces\Bishop;
 use Shogi\Pieces\GoldGeneral;
 use Shogi\Pieces\King;
@@ -26,8 +28,7 @@ final class Player
         $this->name           = $name;
         $this->isWhite        = $isWhite;
         $this->capturedPieces = new PlayerInventory();
-
-        $this->initializeInventory();
+        $this->inventory      = new PlayerInventory();
     }
 
     public function name(): string
@@ -40,8 +41,9 @@ final class Player
         return $this->isWhite;
     }
 
-    public function capturePiece(PieceInterface $piece)
+    public function capture(PieceInterface $piece)
     {
+        $piece->capture();
         $this->capturedPieces->add($piece);
     }
 
@@ -50,113 +52,60 @@ final class Player
         return $this->capturedPieces;
     }
 
-    public function ownsAPiece(PieceInterface $piece)
+    public function inventory(): PlayerInventory
+    {
+        return $this->inventory;
+    }
+
+    public function ownsAPiece(PieceInterface $piece): bool
     {
         return $this->inventory->contains($piece);
     }
 
+    /**
+     * @throws PieceNotFoundInInventory
+     */
+    public function takeCapturedPiece(string $name): PieceInterface
+    {
+        if (strlen($name) > 1) {
+            throw new CoordinateNotWellFormedNotation($name);
+        }
+
+        foreach ($this->capturedPieces as $capturedPiece) {
+            if ($capturedPiece->name() === $name) {
+                return $capturedPiece;
+            }
+        }
+
+        throw new PieceNotFoundInInventory($name);
+    }
+
     public function putPiecesOnBoard(Board $board): Player
     {
-        foreach ($this->inventory as $piece) {
-            if ($piece->isCasted()) {
-                continue;
-            }
+        $this->putPiece($board, $this->isWhite ? 'A1' : 'I1', Lance::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A2' : 'I2', Knight::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A3' : 'I3', SilverGeneral::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A4' : 'I4', GoldGeneral::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A5' : 'I5', King::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A6' : 'I6', GoldGeneral::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A7' : 'I7', SilverGeneral::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A8' : 'I8', Knight::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'A9' : 'I9', Lance::create($this->isWhite));
 
-            if ($piece instanceof King) {
-                $board->fillSpotAndCastPiece($this->isWhite ? 'A5' : 'I5', $piece);
-            }
+        $this->putPiece($board, $this->isWhite ? 'B2' : 'H8', Bishop::create($this->isWhite));
+        $this->putPiece($board, $this->isWhite ? 'B8' : 'H2', Rook::create($this->isWhite));
 
-            if ($piece instanceof Lance) {
-                $target = $this->isWhite ? 'A9' : 'I9';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-
-                $target = $this->isWhite ? 'A1' : 'I1';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-            }
-
-            if ($piece instanceof Knight) {
-                $target = $this->isWhite ? 'A8' : 'I8';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-
-                $target = $this->isWhite ? 'A2' : 'I2';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-            }
-
-            if ($piece instanceof SilverGeneral) {
-                $target = $this->isWhite ? 'A7' : 'I7';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-
-                $target = $this->isWhite ? 'A3' : 'I3';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-            }
-
-            if ($piece instanceof GoldGeneral) {
-                $target = $this->isWhite ? 'A6' : 'I6';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-
-                $target = $this->isWhite ? 'A4' : 'I4';
-                if (!$board->spotContainsPiece($target, $piece)) {
-                    $board->fillSpotAndCastPiece($target, $piece);
-                }
-            }
-
-            if ($piece instanceof Bishop) {
-                $target = $this->isWhite ? 'B2' : 'H8';
-                $board->fillSpotAndCastPiece($target, $piece);
-            }
-
-            if ($piece instanceof Rook) {
-                $target = $this->isWhite ? 'B8' : 'H2';
-                $board->fillSpotAndCastPiece($target, $piece);
-            }
-
-            if ($piece instanceof Pawn) {
-                for($i = 9; $i >= 1; $i--) {
-                    $target = $this->isWhite ? 'C'.$i : 'G'.$i;
-                    if (!$board->spotContainsPiece($target, $piece)) {
-                        $board->fillSpotAndCastPiece($target, $piece);
-                    }
-                }
-            }
+        for ($i = 9; $i >= 1; $i--) {
+            $this->putPiece($board, $this->isWhite ? 'C'.$i : 'G'.$i, Pawn::create($this->isWhite));
         }
 
         return $this;
     }
 
-    private function initializeInventory(): void
+    private function putPiece(Board $board, string $target, PieceInterface $piece): void
     {
-        $bigPieces = [
-            new King($this->isWhite),
-            new Lance($this->isWhite),
-            new Lance($this->isWhite),
-            new Knight($this->isWhite),
-            new Knight($this->isWhite),
-            new SilverGeneral($this->isWhite),
-            new SilverGeneral($this->isWhite),
-            new GoldGeneral($this->isWhite),
-            new GoldGeneral($this->isWhite),
-
-            new Bishop($this->isWhite),
-            new Rook($this->isWhite),
-        ];
-
-        $pawns = array_fill(0, 9, new Pawn($this->isWhite));
-
-        $this->inventory = new PlayerInventory([...$bigPieces, ...$pawns]);
+        $this->inventory->add($piece);
+        $board->fillSpotAndCastPiece($target, $piece);
     }
 
     public function __toString()

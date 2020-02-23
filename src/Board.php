@@ -40,8 +40,9 @@ final class Board
 
     public function fillSpotAndCastPiece(string $target, PieceInterface $piece): self
     {
-        if (!$this->spotContainsPiece($target, $piece)) {
-            $this->spot($target)->fillAndCastPiece($piece);
+        if (!$this->spotContainsPiece($target, $piece) && !$this->spotIsTaken($target)) {
+            $spot = $this->spot($target);
+            $spot->fillAndCastPiece($piece);
         }
 
         return $this;
@@ -50,8 +51,16 @@ final class Board
     public function spotContainsPiece(string $target, PieceInterface $piece): bool
     {
         $spot = $this->spot($target);
+        if (!$spot->piece()) {
+            return false;
+        }
 
-        return $spot->piece() === $piece;
+        return \spl_object_hash($spot->piece()) === \spl_object_hash($piece);
+    }
+
+    private function spotIsTaken(string $target): bool
+    {
+        return $this->spot($target)->isTaken();
     }
 
     private function translateInput(string $input): CoordinateTranslator

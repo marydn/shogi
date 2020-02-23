@@ -6,6 +6,7 @@ namespace Shogi\Pieces;
 
 use Shogi\Board;
 use Shogi\Spot;
+use Shogi\ValueObject\Coordinate;
 
 /**
  * Rook's behaviour:
@@ -65,13 +66,29 @@ final class Rook extends BasePiece implements PieceInterface, PiecePromotableInt
 
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
-//        $spacesInBetween = range($start, $end);
-//
-//        foreach ($spacesInBetween as $spaceToCheck) {
-//            if ($board->pieceFromSpot($spaceToCheck)) {
-//                return true;
-//            }
-//        }
+        $x = $source->x();
+        $y = $source->y();
+
+        $counter = 0;
+        do {
+            if ($x === $target->x()) {
+                $y = $source->y() > $target->y() ? $y - 1 : $y + 1;
+            }
+
+            if ($y === $target->y()) {
+                $x = $source->x() > $target->x() ? $x - 1 : $x + 1;
+            }
+
+            $readableX  = abs($x - 9);
+            $readableY  = Coordinate::LETTERS[$y];
+            $coordinate = sprintf('%s%s', $readableY, $readableX);
+
+            if ($board->pieceFromSpot($coordinate)) {
+                return true;
+            }
+
+            $counter++;
+        } while (($x !== $target->x() || $y !== $target->y()) && $counter < 9);
 
         return false;
     }

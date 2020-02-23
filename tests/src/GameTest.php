@@ -72,11 +72,14 @@ final class GameTest extends TestCase
     {
         $game = new Game;
 
-        $piece = $game->pieceFromSpot('c1');
+        $spot = $game->spotFromBoard('c1');
+        $pieceToCapture = $spot->piece();
+
         $player = $game->playerBlack();
 
-        $player->capturePiece($piece);
+        $player->capture($pieceToCapture);
 
         $this->assertCount(1, $player->captures());
+        $this->assertContains($pieceToCapture, $player->captures());
     }
 }

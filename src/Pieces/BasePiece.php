@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Shogi\Pieces;
 
-use Shogi\Board;
-use Shogi\Spot;
+use Shogi\Notation;
 
 abstract class BasePiece
 {
-    const CAPTURED_SYMBOL = '*';
-
     protected bool $isWhite = false;
     protected bool $isCaptured = false;
     protected bool $isCasted = false;
 
-    public function __construct(bool $isWhite)
+    private function __construct(bool $isWhite)
     {
         $this->isWhite = $isWhite;
     }
 
-    abstract public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool;
+    public static function create(bool $isWhite): self
+    {
+        return new static($isWhite);
+    }
 
     final public function isWhite(): bool
     {
@@ -56,8 +56,13 @@ abstract class BasePiece
         return false === $this->isCaptured() && true === $this->isCasted();
     }
 
+    public function name(): string
+    {
+        return static::NAME;
+    }
+
     public function __toString()
     {
-        return sprintf('%s%s', $this->isCaptured ? self::CAPTURED_SYMBOL : '', static::NAME);
+        return sprintf('%s%s', $this->isCaptured ? Notation::CAPTURE : '', static::NAME);
     }
 }

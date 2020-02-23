@@ -49,11 +49,6 @@ final class Spot
         return boolval($this->piece);
     }
 
-    public function capturePiece(): void
-    {
-        $this->piece()->capture();
-    }
-
     public function isPromotionArea(): bool
     {
         if ($this->pieceIsWhite()) {

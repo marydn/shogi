@@ -67,6 +67,4 @@ final class SilverGeneral extends BasePiece implements PieceInterface, PieceProm
 
         return $this;
     }
-
-
 }

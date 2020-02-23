@@ -17,7 +17,7 @@ final class PawnTest extends TestCase
     /** @test */
     public function it_should_create_a_pawn(): void
     {
-        $pawn = new Pawn(false);
+        $pawn = Pawn::create(false);
 
         $this->assertInstanceOf(Pawn::class, $pawn);
     }
@@ -41,7 +41,7 @@ final class PawnTest extends TestCase
         $source = new Spot(new CoordinateTranslator('G1'));
         $target = new Spot(new CoordinateTranslator('E1'));
 
-        $pawn = new Pawn(false);
+        $pawn = Pawn::create(false);
 
         $this->assertFalse($pawn->isMoveAllowed($board, $source, $target));
     }
@@ -53,7 +53,7 @@ final class PawnTest extends TestCase
         $source = new Spot(new CoordinateTranslator('G1'));
         $target = new Spot(new CoordinateTranslator('H1'));
 
-        $pawn = new Pawn(false);
+        $pawn = Pawn::create(false);
 
         $this->assertFalse($pawn->isMoveAllowed($board, $source, $target));
     }

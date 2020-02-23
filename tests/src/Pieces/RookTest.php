@@ -14,7 +14,7 @@ final class RookTest extends TestCase
     /** @test */
     public function it_should_create_a_rook(): void
     {
-        $pawn = new Rook(false);
+        $pawn = Rook::create(false);
 
         $this->assertInstanceOf(Rook::class, $pawn);
     }
@@ -50,5 +50,14 @@ final class RookTest extends TestCase
 
         $game = new Game;
         $game->currentPlayerMove('H2xH8');
+    }
+
+    /** @test */
+    public function it_should_not_move_over_busy_spots(): void
+    {
+        $this->expectException(IllegalMove::class);
+
+        $game = new Game;
+        $game->currentPlayerMove('H2xH9');
     }
 }
