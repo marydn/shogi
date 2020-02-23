@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shogi\Pieces;
 
 use Shogi\Board;
+use Shogi\Exception\IllegalMove;
 use Shogi\Spot;
 
 /**
@@ -23,10 +24,6 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
         if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
-            return false;
-        }
-
-        if (!$this->isAvailable()) {
             return false;
         }
 
@@ -64,6 +61,10 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
 
     public function isDropAllowed(Board $board, Spot $target): bool
     {
+        if ($target->isTaken() || $target->isPromotionArea()) {
+            return false;
+        }
+
         return true;
     }
 }

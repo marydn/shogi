@@ -59,7 +59,7 @@ final class Player
 
     public function ownsAPiece(PieceInterface $piece): bool
     {
-        return $this->inventory->contains($piece);
+        return $this->inventory->contains($piece) || $this->capturedPieces->contains($piece);
     }
 
     /**

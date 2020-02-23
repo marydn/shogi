@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shogi;
 
 use Shogi\Exception\IllegalMove;
+use Shogi\Pieces\PieceDroppableInterface;
 use Shogi\Pieces\PieceInterface;
 use Shogi\Pieces\PiecePromotableInterface;
 
@@ -108,14 +109,18 @@ final class Game
         if (false !== stripos($notation, 'drop ')) {
             $notation = str_replace('drop ', '', $notation);
 
-            [$pieceName, $target] = explode(' ', strtolower($notation));
+            [$pieceName, $target] = explode(' ', strtoupper($notation));
 
             $piece = $player->takeCapturedPiece($pieceName);
+            if (!$piece instanceof PieceDroppableInterface) {
+                throw new IllegalMove('You cannot drop this piece');
+            }
 
             $targetSpot = $this->spotFromBoard($target);
 
-            if ($targetSpot->isTaken() || $targetSpot->isPromotionArea()) {
-                throw new IllegalMove();
+            $canDrop = $piece->isDropAllowed($this->board, $targetSpot);
+            if (!$canDrop) {
+                throw new IllegalMove('Drop is not allowed');
             }
 
             $targetSpot->fill($piece);
@@ -127,16 +132,16 @@ final class Game
 
             $piece = $sourceSpot->piece();
             if (!$piece) {
-                throw new IllegalMove;
+                throw new IllegalMove('Empty spot');
             }
 
             if (!$player->ownsAPiece($piece)) {
-                throw new IllegalMove;
+                throw new IllegalMove('This piece is not yours');
             }
 
             $canMove = $piece->isMoveAllowed($this->board, $sourceSpot, $targetSpot);
             if (!$canMove) {
-                throw new IllegalMove;
+                throw new IllegalMove('Move is not allowed');
             }
 
             if ($targetSpot->isTaken()) {

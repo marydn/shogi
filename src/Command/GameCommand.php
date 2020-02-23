@@ -55,7 +55,8 @@ final class GameCommand extends Command
                 $error = null;
             }
 
-            $output->writeln('<comment>Enter moves using notation: from x to. For example: C1xD1</comment>');
+            $output->writeln('<comment>To move a piece: C1xD1</comment>');
+            $output->writeln('<comment>To drop a piece: drop P G1</comment>');
 
             $question = new Question(sprintf('<question>Turn for %s. Enter move:</question> ', $this->game->currentPlayer()));
 

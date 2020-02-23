@@ -40,6 +40,7 @@ abstract class BasePiece
     final public function capture(): PieceInterface
     {
         $this->isCaptured = true;
+        $this->isWhite    = !$this->isWhite;
 
         return $this;
     }
