@@ -4,6 +4,8 @@
   * [Needed tools](#needed-tools)
   * [Application execution](#application-execution)
   * [Tests execution](#tests-execution)
+* [Project explanation](#project-explanation)
+  * [Developed features](#developed-features)
   
 ## Environment setup
 
@@ -31,12 +33,13 @@ Execute PHP Unit tests: `make test`
 
 OOP Design example for a variation of a Japanese chess version called [Shogi](https://en.wikipedia.org/wiki/Shogi).
 
-Developed features:
+### Developed features:
 
   * Console interactive interface
   * Pieces placement
   * Pieces movements
-  * Capture opponent's pieces
+  * Capture opponent's pieces (only Pawns, Rooks and Bishops)
+  * Reinsert pieces into the game (only Pawns)
     
 ```bash
 $ tree -L 4 src
@@ -49,7 +52,8 @@ src
 ├── Exception
 │   ├── CoordinateNotFound.php
 │   ├── CoordinateNotWellFormedNotation.php
-│   └── IllegalMove.php
+│   ├── IllegalMove.php
+│   └── PieceNotFoundInInventory.php
 ├── Game.php
 ├── Move.php
 ├── MovesList.php # Collection of Moves
@@ -62,6 +66,7 @@ src
 │   ├── Knight.php
 │   ├── Lance.php
 │   ├── Pawn.php
+│   ├── PieceDroppableInterface.php # This Interface is for pieces that can be droppable
 │   ├── PieceInterface.php
 │   ├── PiecePromotableInterface.php # This Interface is for pieces that can be promoted
 │   ├── Rook.php
@@ -69,10 +74,12 @@ src
 ├── PlayerInventory.php # Player's inventory
 ├── Player.php # Every player of the game
 ├── Shared
-│   └── Collection.php # Abstract class for Objects that holds collections
-├── Spot.php   # Every spot in the Board
+│   ├── Collection.php # Abstract class for Objects that holds collections
+│   └── Enum.php # Abstract class for Objects used as an Enum value object
+├── Spot.php # Every spot in the Board
 └── ValueObject
-    └── Coordinate.php  # User's input
+    ├── Coordinate.php # User's input
+    └── NotationType.php # ValueObject to identify the type of move
 ```
 
 ![image info](./doc/images/demo.png)
