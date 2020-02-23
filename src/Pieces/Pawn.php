@@ -72,12 +72,16 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
             $coordinate = sprintf('%s%s', $y, $row);
 
             $piece = $board->pieceFromSpot($coordinate);
+            if (!$piece) {
+                continue;
+            }
 
-            $samePlayer = $piece->isWhite() === $pieceToDrop->isWhite();
-            $isPawn     = $piece instanceof Pawn;
-            $isPromoted = $this instanceof PiecePromotableInterface && $this->isPromoted();
+            $samePlayer   = $piece->isWhite() === $pieceToDrop->isWhite();
+            $isPawn       = $piece instanceof Pawn;
+            $isPromoted   = $this instanceof PiecePromotableInterface && $this->isPromoted();
+            $isColumnBusy = $samePlayer && $isPawn && !$isPromoted;
 
-            if ($samePlayer && $isPawn && !$isPromoted) {
+            if ($isColumnBusy) {
                 return false;
             }
 

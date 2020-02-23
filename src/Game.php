@@ -111,51 +111,20 @@ final class Game
 
             [$pieceName, $target] = explode(' ', strtoupper($notation));
 
-            $piece = $player->takeCapturedPiece($pieceName);
-            if (!$piece instanceof PieceDroppableInterface) {
-                throw new IllegalMove('You cannot drop this piece');
-            }
-
+            $piece      = $player->takeCapturedPiece($pieceName);
             $targetSpot = $this->spotFromBoard($target);
 
-            $canDrop = $piece->isDropAllowed($this->board, $piece, $targetSpot);
-            if (!$canDrop) {
-                throw new IllegalMove('Drop is not allowed');
-            }
-
-            $targetSpot->fill($piece);
+            $move = Move::drop($this->board, $player, $piece, $targetSpot);
         } else {
             [$source, $target] = explode('x', strtolower($notation));
 
             $sourceSpot = $this->spotFromBoard($source);
             $targetSpot = $this->spotFromBoard($target);
 
-            $piece = $sourceSpot->piece();
-            if (!$piece) {
-                throw new IllegalMove('Empty spot');
-            }
-
-            if (!$player->ownsAPiece($piece)) {
-                throw new IllegalMove('This piece is not yours');
-            }
-
-            $canMove = $piece->isMoveAllowed($this->board, $sourceSpot, $targetSpot);
-            if (!$canMove) {
-                throw new IllegalMove('Move is not allowed');
-            }
-
-            if ($targetSpot->isTaken()) {
-                $targetPiece = $targetSpot->piece();
-                $player->capture($targetPiece);
-            }
-
-            $sourceSpot->removePiece();
-            $targetSpot->fill($piece);
-
-            if ($targetSpot->isPromotionArea() && $piece instanceof PiecePromotableInterface) {
-                $piece->promote();
-            }
+            $move = Move::make($this->board, $player, $sourceSpot, $targetSpot);
         }
+
+        $this->moves->add($move);
 
         $this->flipTurn();
     }

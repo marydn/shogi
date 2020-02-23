@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shogi\Pieces;
 
 use Shogi\Notation;
+use Shogi\ValueObject\NotationType;
 
 abstract class BasePiece
 {
@@ -64,6 +65,6 @@ abstract class BasePiece
 
     public function __toString()
     {
-        return sprintf('%s%s', $this->isCaptured ? Notation::CAPTURE : '', static::NAME);
+        return sprintf('%s%s', $this->isCaptured ? NotationType::capture() : '', static::NAME);
     }
 }
