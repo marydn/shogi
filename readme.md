@@ -42,6 +42,7 @@ OOP Design example for a variation of a Japanese chess version called [Shogi](ht
   * Pieces movements
   * Capture opponent's pieces
   * Drop captured pieces (only Pawns)
+  * Pieces are automatically promoted when they reach promotion zone (last 3 rows)
 
 ### Diving project structure:
 
