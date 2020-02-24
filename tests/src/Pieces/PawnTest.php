@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace src\Pieces;
+namespace Shogi\Test\Pieces;
 
 use PHPUnit\Framework\TestCase;
 use Shogi\Board;
@@ -136,5 +136,22 @@ final class PawnTest extends TestCase
         $game->currentPlayerMove('F2xE2'); // black
         $game->currentPlayerMove('D1xE1'); // White
         $game->currentPlayerMove('E2xF1'); // black
+    }
+
+    /** @test */
+    public function it_should_drop_a_pawn(): void
+    {
+        $game = new Game;
+        $game->currentPlayerMove('G1xF1'); // Black
+        $game->currentPlayerMove('C1xD1'); // White
+        $game->currentPlayerMove('F1xE1'); // Black
+        $game->currentPlayerMove('D1xE1'); // White - Captures
+        $game->currentPlayerMove('I1xE1'); // Black - Captures
+
+        $piece = $game->playerWhite()->takeCapturedPiece('P');
+
+        $game->currentPlayerMove('drop p d1');
+
+        $this->assertEquals($piece, $game->pieceFromSpot('D1'));
     }
 }
