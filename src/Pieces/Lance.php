@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Shogi\Pieces;
 
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Shogi\Board;
 use Shogi\Spot;
 
@@ -24,10 +23,6 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
     public function isMoveAllowed(Board $board, Spot $source, Spot $target): bool
     {
         if ($target->isTaken() && $target->pieceIsWhite() === $this->isWhite()) {
-            return false;
-        }
-
-        if (!$this->isAvailable()) {
             return false;
         }
 
@@ -82,7 +77,7 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
         foreach ($spacesInBetween as $spaceToCheck) {
             $coordinate = sprintf('%s%s', $spaceToCheck, $source->readableX());
 
-            if ($coordinate === $source->readableXY()) {
+            if ($coordinate === $source->readableXY() || $coordinate === $target->readableXY()) {
                 continue;
             }
 
