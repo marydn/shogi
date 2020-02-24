@@ -5,6 +5,7 @@
   * [Application execution](#application-execution)
   * [Tests execution](#tests-execution)
 * [Project explanation](#project-explanation)
+  * [Developed features](#developed-features)
   * [Diving project structure](#diving-project-structure)
   * [UI Preview](#ui-preview)
   
@@ -39,7 +40,7 @@ OOP Design example for a variation of a Japanese chess version called [Shogi](ht
   * Console interactive interface
   * Pieces placement
   * Pieces movements
-  * Capture opponent's pieces (only Pawns, Rooks and Bishops)
+  * Capture opponent's pieces
   * Drop captured pieces (only Pawns)
 
 ### Diving project structure:
