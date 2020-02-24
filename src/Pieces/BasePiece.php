@@ -18,9 +18,14 @@ abstract class BasePiece
         $this->isWhite = $isWhite;
     }
 
-    public static function create(bool $isWhite): self
+    public static function createWhite(): self
     {
-        return new static($isWhite);
+        return new static(true);
+    }
+
+    public static function createBlack(): self
+    {
+        return new static(false);
     }
 
     final public function isWhite(): bool

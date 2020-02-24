@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Shogi\Pieces;
 
 use Shogi\Board;
-use Shogi\Exception\IllegalMove;
 use Shogi\Spot;
 
 /**
@@ -68,7 +67,11 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
 
     public function promoteTo(): PieceInterface
     {
-        return GoldGeneral::create($this->isWhite);
+        if ($this->isWhite) {
+            return GoldGeneral::createWhite();
+        }
+
+        return GoldGeneral::createBlack();
     }
 
     public function isDropAllowed(Board $board, PieceInterface $pieceToDrop, Spot $target): bool

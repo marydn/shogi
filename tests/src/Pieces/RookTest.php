@@ -14,7 +14,7 @@ final class RookTest extends TestCase
     /** @test */
     public function it_should_create_a_rook(): void
     {
-        $pawn = Rook::create(false);
+        $pawn = Rook::createBlack();
 
         $this->assertInstanceOf(Rook::class, $pawn);
     }

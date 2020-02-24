@@ -73,6 +73,10 @@ final class SilverGeneral extends BasePiece implements PieceInterface, PieceProm
 
     public function promoteTo(): PieceInterface
     {
-        return GoldGeneral::create($this->isWhite);
+        if ($this->isWhite) {
+            return GoldGeneral::createWhite();
+        }
+
+        return GoldGeneral::createBlack();
     }
 }

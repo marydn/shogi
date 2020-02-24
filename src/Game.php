@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace Shogi;
 
 use Shogi\Exception\IllegalMove;
-use Shogi\Pieces\PieceDroppableInterface;
+use Shogi\Pieces\Bishop;
+use Shogi\Pieces\GoldGeneral;
+use Shogi\Pieces\King;
+use Shogi\Pieces\Knight;
+use Shogi\Pieces\Lance;
+use Shogi\Pieces\Pawn;
 use Shogi\Pieces\PieceInterface;
-use Shogi\Pieces\PiecePromotableInterface;
+use Shogi\Pieces\Rook;
+use Shogi\Pieces\SilverGeneral;
 
 final class Game
 {
@@ -20,14 +26,13 @@ final class Game
     public function __construct(bool $initialize = true)
     {
         $this->board         = new Board;
-        $this->playerBlack   = new Player('Black');
+        $this->playerBlack   = new Player('Black', false);
         $this->playerWhite   = new Player('White', true);
         $this->currentPlayer = $this->playerBlack;
         $this->moves         = new MovesList();
 
         if ($initialize) {
-            $this->playerWhite->putPiecesOnBoard($this->board);
-            $this->playerBlack->putPiecesOnBoard($this->board);
+            $this->setPiecesOnBoard();
         }
     }
 
@@ -78,6 +83,16 @@ final class Game
         $this->playerMakesAMove($this->currentPlayer(), $notation);
     }
 
+    public function currentPlayerCaptures(): PlayerInventory
+    {
+        return $this->currentPlayer()->captures();
+    }
+
+    public function opposingPlayerCaptures(): PlayerInventory
+    {
+        return $this->opposingPlayer()->captures();
+    }
+
     public function opposingPlayerMove(string $notation): void
     {
         $this->playerMakesAMove($this->opposingPlayer(), $notation);
@@ -91,6 +106,16 @@ final class Game
     public function blackPlayerCaptures(): PlayerInventory
     {
         return $this->playerBlack()->captures();
+    }
+
+    public function currentPlayerSetPiece(string $notation, PieceInterface $piece): void
+    {
+        $this->currentPlayer()->setPieceOnBoard($this->board, $notation, $piece);
+    }
+
+    public function opposingPlayerSetPiece(string $notation, PieceInterface $piece): void
+    {
+        $this->opposingPlayer()->setPieceOnBoard($this->board, $notation, $piece);
     }
 
     public function hasEnded(): bool
@@ -129,5 +154,40 @@ final class Game
         $this->moves->add($move);
 
         $this->flipTurn();
+    }
+
+    private function setPiecesOnBoard()
+    {
+        $this->playerWhite->setPieceOnBoard($this->board, 'A1', Lance::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A2', Knight::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A3', SilverGeneral::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A4', GoldGeneral::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A5', King::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A6', GoldGeneral::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A7', SilverGeneral::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A8', Knight::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'A9', Lance::createWhite());
+
+        $this->playerWhite->setPieceOnBoard($this->board, 'B2', Bishop::createWhite());
+        $this->playerWhite->setPieceOnBoard($this->board, 'B8', Rook::createWhite());
+
+        for ($i = 9; $i >= 1; $i--) {
+            $this->playerWhite->setPieceOnBoard($this->board, 'C'.$i, Pawn::createWhite());
+
+            $this->playerBlack->setPieceOnBoard($this->board, 'G'.$i, Pawn::createBlack());
+        }
+
+        $this->playerBlack->setPieceOnBoard($this->board, 'H2', Rook::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'H8', Bishop::createBlack());
+
+        $this->playerBlack->setPieceOnBoard($this->board, 'I1', Lance::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I2', Knight::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I3', SilverGeneral::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I4', GoldGeneral::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I5', King::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I6', GoldGeneral::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I7', SilverGeneral::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I8', Knight::createBlack());
+        $this->playerBlack->setPieceOnBoard($this->board, 'I9', Lance::createBlack());
     }
 }

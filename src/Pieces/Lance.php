@@ -72,7 +72,11 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
 
     public function promoteTo(): PieceInterface
     {
-        return GoldGeneral::create($this->isWhite);
+        if ($this->isWhite) {
+            return GoldGeneral::createWhite();
+        }
+
+        return GoldGeneral::createBlack();
     }
 
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool

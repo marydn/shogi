@@ -5,67 +5,82 @@ declare(strict_types=1);
 namespace Shogi\Test\Pieces;
 
 use PHPUnit\Framework\TestCase;
-use Shogi\Board;
-use Shogi\CoordinateTranslator;
 use Shogi\Exception\IllegalMove;
 use Shogi\Game;
 use Shogi\Pieces\Pawn;
-use Shogi\Spot;
 
 final class PawnTest extends TestCase
 {
+    private Game $game;
+    private Pawn $pawn;
+
+    public function setUp(): void
+    {
+        $this->game  = new Game(false);
+        $this->pawn = Pawn::createBlack();
+    }
+
+    public function tearDown(): void
+    {
+        unset($this->game, $this->pawn);
+    }
+
     /** @test */
     public function it_should_create_a_pawn(): void
     {
-        $pawn = Pawn::create(false);
+        $pawn = Pawn::createBlack();
 
         $this->assertInstanceOf(Pawn::class, $pawn);
     }
 
     /** @test */
+    public function it_should_set_a_piece(): void
+    {
+        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+
+        $this->assertEquals($this->pawn, $this->game->pieceFromSpot('G1'));
+    }
+
+    /** @test */
     public function it_should_move_only_one_step(): void
     {
-        $game = new Game;
+        $this->game->currentPlayerSetPiece('G1', $this->pawn);
 
-        $piece = $game->pieceFromSpot('G1');
+        $this->game->currentPlayerMove('G1xF1');
 
-        $game->currentPlayerMove('G1xF1');
-
-        $this->assertEquals($piece, $game->pieceFromSpot('F1'));
+        $this->assertEquals($this->pawn, $this->game->pieceFromSpot('F1'));
     }
 
     /** @test */
-    public function it_should_not_move_two_steps_for_black_pieces(): void
-    {
-        $board  = new Board;
-        $source = new Spot(new CoordinateTranslator('G1'));
-        $target = new Spot(new CoordinateTranslator('E1'));
-
-        $pawn = Pawn::create(false);
-
-        $this->assertFalse($pawn->isMoveAllowed($board, $source, $target));
-    }
-
-    /** @test */
-    public function it_should_not_move_one_step_backwards_for_black_pieces(): void
-    {
-        $board  = new Board;
-        $source = new Spot(new CoordinateTranslator('G1'));
-        $target = new Spot(new CoordinateTranslator('H1'));
-
-        $pawn = Pawn::create(false);
-
-        $this->assertFalse($pawn->isMoveAllowed($board, $source, $target));
-    }
-
-    /** @test */
-    public function it_should_not_move_one_step_backwards_for_white_pieces(): void
+    public function it_should_not_move_two_steps_forward_for_black_piece(): void
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G1xF1');
-        $game->currentPlayerMove('C1xB1');
+        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+
+        $this->game->currentPlayerMove('G1xE1');
+    }
+
+    /** @test */
+    public function it_should_not_move_one_step_backward_for_black_piece(): void
+    {
+        $this->expectException(IllegalMove::class);
+
+        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+
+        $this->game->currentPlayerMove('G1xH1');
+    }
+
+    /** @test */
+    public function it_should_not_move_one_step_backward_for_white_pieces(): void
+    {
+        $this->expectException(IllegalMove::class);
+
+        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+        $this->game->opposingPlayerSetPiece('C1', Pawn::createWhite());
+
+        $this->game->currentPlayerMove('G1xF1');
+        $this->game->currentPlayerMove('C1xB1');
     }
 
     /** @test */
@@ -73,10 +88,9 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F2xF1'); // black
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+
+        $this->game->currentPlayerMove('G2xG1');
     }
 
     /** @test */
@@ -84,10 +98,9 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F2xF3'); // black
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+
+        $this->game->currentPlayerMove('G2xG3');
     }
 
     /** @test */
@@ -95,10 +108,9 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F2xE3'); // black
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+
+        $this->game->currentPlayerMove('G2xF3');
     }
 
     /** @test */
@@ -106,52 +118,77 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F2xE1'); // black
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+
+        $this->game->currentPlayerMove('G2xF1');
     }
 
     /** @test */
-    public function it_should_not_move_to_diagonal_left_behind(): void
+    public function it_should_not_move_backward_to_diagonal_left(): void
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F2xE2'); // black
-        $game->currentPlayerMove('D1xE1'); // White
-        $game->currentPlayerMove('E2xF3'); // black
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+
+        $this->game->currentPlayerMove('G2xH3');
     }
 
     /** @test */
-    public function it_should_not_move_to_diagonal_right_behind(): void
+    public function it_should_not_move_backward_to_diagonal_right(): void
     {
         $this->expectException(IllegalMove::class);
 
-        $game = new Game;
-        $game->currentPlayerMove('G2xF2'); // black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F2xE2'); // black
-        $game->currentPlayerMove('D1xE1'); // White
-        $game->currentPlayerMove('E2xF1'); // black
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+
+        $this->game->currentPlayerMove('G2xH1');
+    }
+
+    /** @test */
+    public function it_should_not_jump_over_another_piece_of_same_player(): void
+    {
+        $this->expectException(IllegalMove::class);
+
+        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G3', Pawn::createBlack());
+
+        $this->game->currentPlayerMove('G2xG3');
+    }
+
+    /** @test */
+    public function it_should_not_capture_a_piece_of_same_player(): void
+    {
+        $this->expectException(IllegalMove::class);
+
+        $this->game->currentPlayerSetPiece('F4', $this->pawn);
+        $this->game->currentPlayerSetPiece('E4', Pawn::createBlack());
+
+        $this->game->currentPlayerMove('F4xE4');
+    }
+
+    /** @test */
+    public function it_should_capture_an_enemy_piece(): void
+    {
+        $captured = Pawn::createWhite();
+
+        $this->game->currentPlayerSetPiece('F4', $this->pawn);
+        $this->game->currentPlayerSetPiece('E4', $captured);
+
+        $this->game->currentPlayerMove('F4xE4');
+
+        $this->assertContains($captured, $this->game->opposingPlayerCaptures());
     }
 
     /** @test */
     public function it_should_drop_a_pawn(): void
     {
-        $game = new Game;
-        $game->currentPlayerMove('G1xF1'); // Black
-        $game->currentPlayerMove('C1xD1'); // White
-        $game->currentPlayerMove('F1xE1'); // Black
-        $game->currentPlayerMove('D1xE1'); // White - Captures
-        $game->currentPlayerMove('I1xE1'); // Black - Captures
+        $captured = Pawn::createWhite();
 
-        $piece = $game->playerWhite()->takeCapturedPiece('P');
+        $this->game->currentPlayerSetPiece('F4', $this->pawn);
+        $this->game->currentPlayerSetPiece('E4', $captured);
 
-        $game->currentPlayerMove('drop p d1');
+        $this->game->currentPlayerMove('F4xE4'); // black captures and flip turns
+        $this->game->opposingPlayerMove('drop p E9'); // black drops
 
-        $this->assertEquals($piece, $game->pieceFromSpot('D1'));
+        $this->assertEquals($captured, $this->game->pieceFromSpot('E9'));
     }
 }

@@ -67,6 +67,10 @@ final class Knight extends BasePiece implements PieceInterface, PiecePromotableI
 
     public function promoteTo(): PieceInterface
     {
-        return GoldGeneral::create($this->isWhite);
+        if ($this->isWhite) {
+            return GoldGeneral::createWhite();
+        }
+
+        return GoldGeneral::createBlack();
     }
 }
