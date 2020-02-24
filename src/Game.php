@@ -17,7 +17,7 @@ final class Game
     private Player $currentPlayer;
     private MovesList $moves;
 
-    public function __construct()
+    public function __construct(bool $initialize = true)
     {
         $this->board         = new Board;
         $this->playerBlack   = new Player('Black');
@@ -25,8 +25,10 @@ final class Game
         $this->currentPlayer = $this->playerBlack;
         $this->moves         = new MovesList();
 
-        $this->playerWhite->putPiecesOnBoard($this->board);
-        $this->playerBlack->putPiecesOnBoard($this->board);
+        if ($initialize) {
+            $this->playerWhite->putPiecesOnBoard($this->board);
+            $this->playerBlack->putPiecesOnBoard($this->board);
+        }
     }
 
     public function playerWhite(): Player
