@@ -25,10 +25,6 @@ final class SilverGeneral extends BasePiece implements PieceInterface, PieceProm
             return false;
         }
 
-        if (!$this->isAvailable()) {
-            return false;
-        }
-
         if ($this->isPromoted()) {
             // @TODO: move like a Gold General
         }

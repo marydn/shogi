@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace src\Pieces;
+namespace Shogi\Test\Pieces;
 
 use PHPUnit\Framework\TestCase;
 use Shogi\Exception\IllegalMove;

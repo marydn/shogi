@@ -26,10 +26,6 @@ final class Knight extends BasePiece implements PieceInterface, PiecePromotableI
             return false;
         }
 
-        if (!$this->isAvailable()) {
-            return false;
-        }
-
         if ($this->isPromoted()) {
             // @TODO: move like a Gold General
         }

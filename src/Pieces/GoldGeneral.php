@@ -22,10 +22,6 @@ final class GoldGeneral extends BasePiece implements PieceInterface
             return false;
         }
 
-        if (!$this->isAvailable()) {
-            return false;
-        }
-
         $x = abs($source->x() - $target->x());
         $y = abs($source->y() - $target->y());
 

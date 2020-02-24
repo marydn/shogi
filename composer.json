@@ -13,6 +13,11 @@
             "Shogi\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Shogi\\Test\\": "tests/src/"
+        }
+    },
     "require": {
         "php": "^7.4.2",
         "symfony/console": "^5.0",
