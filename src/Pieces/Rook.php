@@ -67,6 +67,11 @@ final class Rook extends BasePiece implements PieceInterface, PiecePromotableInt
         return $this;
     }
 
+    public function promoteTo(): PieceInterface
+    {
+        return $this;
+    }
+
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
     {
         $x = $source->x();

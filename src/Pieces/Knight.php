@@ -27,7 +27,7 @@ final class Knight extends BasePiece implements PieceInterface, PiecePromotableI
         }
 
         if ($this->isPromoted()) {
-            // @TODO: move like a Gold General
+            return $this->promoteTo()->isMoveAllowed($board, $source, $target);
         }
 
         $x = abs($source->x() - $target->x());
@@ -63,5 +63,10 @@ final class Knight extends BasePiece implements PieceInterface, PiecePromotableI
         $this->isPromoted = false;
 
         return $this;
+    }
+
+    public function promoteTo(): PieceInterface
+    {
+        return GoldGeneral::create($this->isWhite);
     }
 }

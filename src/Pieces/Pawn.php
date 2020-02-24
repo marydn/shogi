@@ -28,7 +28,7 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
         }
 
         if ($this->isPromoted()) {
-            // @TODO: move like a Gold General
+            return $this->promoteTo()->isMoveAllowed($board, $source, $target);
         }
 
         $x = abs($source->x() - $target->x());
@@ -64,6 +64,11 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
         $this->isPromoted = false;
 
         return $this;
+    }
+
+    public function promoteTo(): PieceInterface
+    {
+        return GoldGeneral::create($this->isWhite);
     }
 
     public function isDropAllowed(Board $board, PieceInterface $pieceToDrop, Spot $target): bool

@@ -27,7 +27,7 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
         }
 
         if ($this->isPromoted()) {
-            // @TODO: move like a Gold General
+            return $this->promoteTo()->isMoveAllowed($board, $source, $target);
         }
 
         $x = abs($source->x() - $target->x());
@@ -68,6 +68,11 @@ final class Lance extends BasePiece implements PieceInterface, PiecePromotableIn
         $this->isPromoted = false;
 
         return $this;
+    }
+
+    public function promoteTo(): PieceInterface
+    {
+        return GoldGeneral::create($this->isWhite);
     }
 
     private function isPathBusy(Board $board, Spot $source, Spot $target): bool
