@@ -70,6 +70,10 @@ abstract class BasePiece
 
     public function __toString()
     {
-        return sprintf('%s%s', $this->isCaptured ? NotationType::capture() : '', static::NAME);
+        return sprintf('%s%s%s',
+            $this->isCaptured ? NotationType::capture() : '',
+            static::NAME,
+            $this instanceof PiecePromotableInterface && $this->isPromoted() ? NotationType::promoted() : ''
+        );
     }
 }
