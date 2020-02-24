@@ -40,7 +40,7 @@ OOP Design example for a variation of a Japanese chess version called [Shogi](ht
   * Pieces placement
   * Pieces movements
   * Capture opponent's pieces (only Pawns, Rooks and Bishops)
-  * Reinsert pieces into the game (only Pawns)
+  * Drop captured pieces (only Pawns)
 
 ### Diving project structure:
 
