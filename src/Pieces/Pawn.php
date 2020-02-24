@@ -72,7 +72,7 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
             return false;
         }
 
-        $row = $target->x();
+        $row = abs($target->x() - 9);
         $ys = range('A', 'I');
 
         foreach ($ys as $y) {
@@ -83,12 +83,11 @@ final class Pawn extends BasePiece implements PieceInterface, PiecePromotableInt
                 continue;
             }
 
-            $samePlayer   = $piece->isWhite() === $pieceToDrop->isWhite();
-            $isPawn       = $piece instanceof Pawn;
-            $isPromoted   = $this instanceof PiecePromotableInterface && $this->isPromoted();
-            $isColumnBusy = $samePlayer && $isPawn && !$isPromoted;
+            $samePlayer = $piece->isWhite() === $pieceToDrop->isWhite();
+            $isPawn     = $piece instanceof Pawn;
+            $isPromoted = $piece instanceof PiecePromotableInterface && $piece->isPromoted();
 
-            if ($isColumnBusy) {
+            if ($samePlayer && $isPawn && !$isPromoted) {
                 return false;
             }
 
