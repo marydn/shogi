@@ -9,6 +9,7 @@ use Shogi\Exception\IllegalMove;
 use Shogi\Game;
 use Shogi\Pieces\Bishop;
 use Shogi\Pieces\Pawn;
+use Shogi\Pieces\PiecePromotableInterface;
 
 final class BishopTest extends TestCase
 {
@@ -168,5 +169,11 @@ final class BishopTest extends TestCase
         $this->game->currentPlayerMove('H8xE5');
 
         $this->assertContains($captured, $this->game->opposingPlayerCaptures());
+    }
+
+    /** @test */
+    public function it_should_be_promotable(): void
+    {
+        $this->assertInstanceOf(PiecePromotableInterface::class, $this->piece);
     }
 }

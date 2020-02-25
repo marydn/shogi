@@ -8,21 +8,22 @@ use PHPUnit\Framework\TestCase;
 use Shogi\Exception\IllegalMove;
 use Shogi\Game;
 use Shogi\Pieces\Pawn;
+use Shogi\Pieces\PiecePromotableInterface;
 
 final class PawnTest extends TestCase
 {
     private Game $game;
-    private Pawn $pawn;
+    private Pawn $piece;
 
     public function setUp(): void
     {
         $this->game  = new Game(false);
-        $this->pawn = Pawn::createBlack();
+        $this->piece = Pawn::createBlack();
     }
 
     public function tearDown(): void
     {
-        unset($this->game, $this->pawn);
+        unset($this->game, $this->piece);
     }
 
     /** @test */
@@ -36,19 +37,19 @@ final class PawnTest extends TestCase
     /** @test */
     public function it_should_set_a_piece(): void
     {
-        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+        $this->game->currentPlayerSetPiece('G1', $this->piece);
 
-        $this->assertEquals($this->pawn, $this->game->pieceFromSpot('G1'));
+        $this->assertEquals($this->piece, $this->game->pieceFromSpot('G1'));
     }
 
     /** @test */
     public function it_should_move_only_one_step(): void
     {
-        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+        $this->game->currentPlayerSetPiece('G1', $this->piece);
 
         $this->game->currentPlayerMove('G1xF1');
 
-        $this->assertEquals($this->pawn, $this->game->pieceFromSpot('F1'));
+        $this->assertEquals($this->piece, $this->game->pieceFromSpot('F1'));
     }
 
     /** @test */
@@ -56,7 +57,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+        $this->game->currentPlayerSetPiece('G1', $this->piece);
 
         $this->game->currentPlayerMove('G1xE1');
     }
@@ -66,7 +67,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+        $this->game->currentPlayerSetPiece('G1', $this->piece);
 
         $this->game->currentPlayerMove('G1xH1');
     }
@@ -76,7 +77,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G1', $this->pawn);
+        $this->game->currentPlayerSetPiece('G1', $this->piece);
         $this->game->opposingPlayerSetPiece('C1', Pawn::createWhite());
 
         $this->game->currentPlayerMove('G1xF1');
@@ -88,7 +89,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
 
         $this->game->currentPlayerMove('G2xG1');
     }
@@ -98,7 +99,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
 
         $this->game->currentPlayerMove('G2xG3');
     }
@@ -108,7 +109,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
 
         $this->game->currentPlayerMove('G2xF3');
     }
@@ -118,7 +119,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
 
         $this->game->currentPlayerMove('G2xF1');
     }
@@ -128,7 +129,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
 
         $this->game->currentPlayerMove('G2xH3');
     }
@@ -138,7 +139,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
 
         $this->game->currentPlayerMove('G2xH1');
     }
@@ -148,7 +149,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('G2', $this->pawn);
+        $this->game->currentPlayerSetPiece('G2', $this->piece);
         $this->game->currentPlayerSetPiece('G3', Pawn::createBlack());
 
         $this->game->currentPlayerMove('G2xG3');
@@ -159,7 +160,7 @@ final class PawnTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('F4', $this->pawn);
+        $this->game->currentPlayerSetPiece('F4', $this->piece);
         $this->game->currentPlayerSetPiece('E4', Pawn::createBlack());
 
         $this->game->currentPlayerMove('F4xE4');
@@ -170,7 +171,7 @@ final class PawnTest extends TestCase
     {
         $captured = Pawn::createWhite();
 
-        $this->game->currentPlayerSetPiece('F4', $this->pawn);
+        $this->game->currentPlayerSetPiece('F4', $this->piece);
         $this->game->currentPlayerSetPiece('E4', $captured);
 
         $this->game->currentPlayerMove('F4xE4');
@@ -183,12 +184,18 @@ final class PawnTest extends TestCase
     {
         $captured = Pawn::createWhite();
 
-        $this->game->currentPlayerSetPiece('F4', $this->pawn);
+        $this->game->currentPlayerSetPiece('F4', $this->piece);
         $this->game->currentPlayerSetPiece('E4', $captured);
 
         $this->game->currentPlayerMove('F4xE4'); // black captures and flip turns
         $this->game->opposingPlayerMove('drop p E9'); // black drops
 
         $this->assertEquals($captured, $this->game->pieceFromSpot('E9'));
+    }
+
+    /** @test */
+    public function it_should_be_promotable(): void
+    {
+        $this->assertInstanceOf(PiecePromotableInterface::class, $this->piece);
     }
 }

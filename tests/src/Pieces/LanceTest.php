@@ -9,59 +9,60 @@ use Shogi\Exception\IllegalMove;
 use Shogi\Game;
 use Shogi\Pieces\Lance;
 use Shogi\Pieces\Pawn;
+use Shogi\Pieces\PiecePromotableInterface;
 
 final class LanceTest extends TestCase
 {
     private Game $game;
-    private Lance $lance;
+    private Lance $piece;
 
     public function setUp(): void
     {
         $this->game  = new Game(false);
-        $this->lance = Lance::createBlack();
+        $this->piece = Lance::createBlack();
     }
 
     public function tearDown(): void
     {
-        unset($this->game, $this->lance);
+        unset($this->game, $this->piece);
     }
 
     /** @test */
     public function it_should_set_a_piece(): void
     {
-        $this->game->currentPlayerSetPiece('I1', $this->lance);
+        $this->game->currentPlayerSetPiece('I1', $this->piece);
 
-        $this->assertEquals($this->lance, $this->game->pieceFromSpot('I1'));
+        $this->assertEquals($this->piece, $this->game->pieceFromSpot('I1'));
     }
 
     /** @test */
     public function it_should_move_straight_one_step_forward(): void
     {
-        $this->game->currentPlayerSetPiece('I1', $this->lance);
+        $this->game->currentPlayerSetPiece('I1', $this->piece);
 
         $this->game->currentPlayerMove('I1xH1');
 
-        $this->assertEquals($this->lance, $this->game->pieceFromSpot('H1'));
+        $this->assertEquals($this->piece, $this->game->pieceFromSpot('H1'));
     }
 
     /** @test */
     public function it_should_move_straight_three_steps_forward(): void
     {
-        $this->game->currentPlayerSetPiece('I1', $this->lance);
+        $this->game->currentPlayerSetPiece('I1', $this->piece);
 
         $this->game->currentPlayerMove('I1xF1');
 
-        $this->assertEquals($this->lance, $this->game->pieceFromSpot('F1'));
+        $this->assertEquals($this->piece, $this->game->pieceFromSpot('F1'));
     }
 
     /** @test */
     public function it_should_move_straight_five_steps_forward(): void
     {
-        $this->game->currentPlayerSetPiece('I1', $this->lance);
+        $this->game->currentPlayerSetPiece('I1', $this->piece);
 
         $this->game->currentPlayerMove('I1xD1');
 
-        $this->assertEquals($this->lance, $this->game->pieceFromSpot('D1'));
+        $this->assertEquals($this->piece, $this->game->pieceFromSpot('D1'));
     }
 
     /** @test */
@@ -69,7 +70,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E1', $this->lance);
+        $this->game->currentPlayerSetPiece('E1', $this->piece);
 
         $this->game->currentPlayerMove('E1xF1');
     }
@@ -79,7 +80,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E1', $this->lance);
+        $this->game->currentPlayerSetPiece('E1', $this->piece);
 
         $this->game->currentPlayerMove('E1xH1');
     }
@@ -89,7 +90,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E1', $this->lance);
+        $this->game->currentPlayerSetPiece('E1', $this->piece);
 
         $this->game->currentPlayerMove('E1xE2');
     }
@@ -99,7 +100,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E1', $this->lance);
+        $this->game->currentPlayerSetPiece('E1', $this->piece);
 
         $this->game->currentPlayerMove('E1xE4');
     }
@@ -109,7 +110,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('D4', $this->lance);
+        $this->game->currentPlayerSetPiece('D4', $this->piece);
 
         $this->game->currentPlayerMove('D4xD3');
     }
@@ -119,7 +120,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('D4', $this->lance);
+        $this->game->currentPlayerSetPiece('D4', $this->piece);
 
         $this->game->currentPlayerMove('D4xD1');
     }
@@ -129,7 +130,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('D4', $this->lance);
+        $this->game->currentPlayerSetPiece('D4', $this->piece);
 
         $this->game->currentPlayerMove('D4xE3');
     }
@@ -139,7 +140,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E4', $this->lance);
+        $this->game->currentPlayerSetPiece('E4', $this->piece);
 
         $this->game->currentPlayerMove('E4xD5');
     }
@@ -149,7 +150,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E4', $this->lance);
+        $this->game->currentPlayerSetPiece('E4', $this->piece);
         $this->game->currentPlayerSetPiece('E6', Pawn::createBlack());
 
         $this->game->currentPlayerMove('E4xE9');
@@ -160,7 +161,7 @@ final class LanceTest extends TestCase
     {
         $this->expectException(IllegalMove::class);
 
-        $this->game->currentPlayerSetPiece('E4', $this->lance);
+        $this->game->currentPlayerSetPiece('E4', $this->piece);
         $this->game->currentPlayerSetPiece('E6', Pawn::createBlack());
 
         $this->game->currentPlayerMove('E4xE6');
@@ -171,11 +172,17 @@ final class LanceTest extends TestCase
     {
         $captured = Pawn::createWhite();
 
-        $this->game->currentPlayerSetPiece('F3', $this->lance);
+        $this->game->currentPlayerSetPiece('F3', $this->piece);
         $this->game->opposingPlayerSetPiece('D3', $captured);
 
         $this->game->currentPlayerMove('F3xD3'); // this changes turns
 
         $this->assertContains($captured, $this->game->opposingPlayerCaptures());
+    }
+
+    /** @test */
+    public function it_should_be_promotable(): void
+    {
+        $this->assertInstanceOf(PiecePromotableInterface::class, $this->piece);
     }
 }

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Shogi\Exception\IllegalMove;
 use Shogi\Game;
 use Shogi\Pieces\Pawn;
+use Shogi\Pieces\PiecePromotableInterface;
 use Shogi\Pieces\SilverGeneral;
 
 final class SilverGeneralTest extends TestCase
@@ -156,5 +157,11 @@ final class SilverGeneralTest extends TestCase
         $this->game->currentPlayerMove('F3xE3');
 
         $this->assertContains($captured, $this->game->opposingPlayerCaptures());
+    }
+
+    /** @test */
+    public function it_should_be_promotable(): void
+    {
+        $this->assertInstanceOf(PiecePromotableInterface::class, $this->piece);
     }
 }
