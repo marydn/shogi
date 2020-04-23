@@ -8,7 +8,7 @@
   * [Developed features](#developed-features)
   * [Diving project structure](#diving-project-structure)
   * [UI Preview](#ui-preview)
-  
+
 ## Environment setup
 
 ### Needed tools
@@ -17,7 +17,7 @@
 2. Clone this project: `git clone https://github.com/marydn/shogi`
 3. Move to the project folder: `cd shogi`
 4. Install PHP dependencies and bring up the project Docker containers with Docker Compose: `make build`
-5. Check everything's up using: `$ docker-composer ps`. It should show `php` service up.
+5. Check everything's up using: `$ docker-compose ps`. It should show `php` service up.
 
 Note: If you want to bring down Docker service use: `make destroy`
 
